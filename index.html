@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#f5f1e7" />
+<title>臺中人事時序島｜HR TIME ISLAND v1.11</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800;900&family=Nunito:wght@500;600;700;800;900&display=swap');
+:root{--ink:#243c36;--muted:#75847d;--paper:#f5f1e7;--paper2:#fbf9f3;--green:#587d6d;--deep:#31574b;--line:#e5e0d5;--orange:#d88c5a;--shadow:0 18px 50px rgba(54,67,55,.11)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 12% 5%,#fff9e9 0,#f5f1e7 40%,#e9eee5 100%);color:var(--ink);font-family:'Noto Sans TC',system-ui,sans-serif}button,input{font:inherit}button{cursor:pointer}a{color:inherit}
+.shell{max-width:1440px;margin:0 auto;padding:22px 30px 42px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:22px}.brand{display:flex;align-items:center;gap:12px}.brandmark{width:45px;height:45px;background:linear-gradient(145deg,#e6b36e,#c77c50);clip-path:polygon(25% 4%,75% 4%,100% 50%,75% 96%,25% 96%,0 50%);display:grid;place-items:center;color:#fff;font-size:20px;filter:drop-shadow(0 5px 5px #c5a47b66)}.brand-title{font-weight:900;letter-spacing:.04em;font-size:18px}.brand-sub{font:800 10px Nunito,sans-serif;letter-spacing:.22em;color:#8a9a8e;margin-top:2px}.top-actions{display:flex;align-items:center;gap:10px}.date-chip,.live-chip{background:#ffffffa8;border:1px solid #e4e1d7;border-radius:999px;padding:9px 14px;font-size:12px;color:#61746a}.live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#75ad87;margin-right:7px;box-shadow:0 0 0 4px #75ad8722}.outline-btn{border:1px solid #d7ded4;background:#ffffff8c;border-radius:999px;color:#496256;padding:9px 15px;font-size:12px;font-weight:700}.outline-btn:hover,.outline-btn.active{background:#527d6a;color:white;border-color:#527d6a}
+.hero{display:flex;align-items:flex-end;justify-content:space-between;gap:30px;margin:12px 4px 24px}.eyebrow{font:900 10px Nunito,sans-serif;letter-spacing:.24em;color:#b1784f;margin-bottom:8px}.hero h1{font-size:clamp(28px,3.6vw,48px);line-height:1.16;letter-spacing:-.04em;margin:0;font-weight:900;color:#29473c}.hero h1 span{color:#b77b50}.hero p{color:#718078;font-size:14px;line-height:1.8;margin:12px 0 0;max-width:630px}.hero-stats{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}.stat{min-width:93px;border:1px solid #e4e0d6;background:#ffffff9c;border-radius:16px;padding:11px 14px;text-align:center;box-shadow:0 5px 18px #455e4c0a}.stat b{font:900 23px Nunito,sans-serif;color:#345a4c;display:block}.stat small{font-size:10px;color:#87958c;white-space:nowrap}
+.controlbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:#fffdf8bb;border:1px solid #e8e3d9;border-radius:18px;padding:12px 14px;margin-bottom:14px;box-shadow:0 8px 22px #495d4b0a}.tabs{display:flex;gap:6px;flex-wrap:wrap}.tab{border:0;border-radius:11px;background:transparent;padding:9px 13px;color:#738078;font-size:12px;font-weight:700}.tab:hover{background:#eff2ea}.tab.active{background:#456d5b;color:#fff;box-shadow:0 5px 12px #456d5b2b}.search{position:relative;min-width:min(310px,100%);flex:0 1 330px}.search input{width:100%;border:1px solid #e0e4d9;background:#fff;border-radius:12px;padding:10px 14px 10px 36px;outline:none;color:var(--ink);font-size:12px}.search input:focus{border-color:#83a895;box-shadow:0 0 0 3px #8eb8a522}.search:before{content:'⌕';position:absolute;left:13px;top:5px;font-size:22px;color:#91a197}
+.monthbar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:3px 2px 12px;scrollbar-width:thin}.month-label{font-size:11px;color:#87938b;font-weight:700;white-space:nowrap;margin-right:5px}.month-btn{border:1px solid #e0e4d9;background:#ffffffa8;color:#6e7d74;border-radius:10px;padding:7px 11px;font-size:11px;font-weight:800;white-space:nowrap;transition:.18s}.month-btn:hover{transform:translateY(-1px);border-color:#9db9a9}.month-btn.active{background:#e6efe5;border-color:#b6cdb9;color:#315b49}.month-btn.all{background:#fff6e9;border-color:#efdfc9;color:#a16f46}.month-btn.all.active{background:#d88c5a;color:#fff;border-color:#d88c5a}
+.workspace{display:grid;grid-template-columns:minmax(0,1.52fr) minmax(360px,.88fr);gap:16px;align-items:stretch}.map-card,.side-card{border:1px solid #e3e0d6;background:#fffdf8;border-radius:23px;box-shadow:var(--shadow);overflow:hidden}.map-head{display:flex;align-items:flex-start;justify-content:space-between;padding:18px 20px 4px;gap:12px}.section-kicker{font:900 9px Nunito,sans-serif;letter-spacing:.22em;color:#b17b55}.map-head h2,.side-head h2{font-size:18px;margin:5px 0 0;font-weight:900}.map-head p{font-size:11px;color:#849087;margin:5px 0 0}.map-actions{display:flex;gap:6px}.tiny-btn{border:1px solid #e0e4da;background:#fff;border-radius:9px;padding:7px 10px;color:#718077;font-size:11px}.tiny-btn:hover{background:#eff4ed;color:#345b4a}.scene-wrap{position:relative;height:520px;margin:0 10px 8px;border-radius:18px;overflow:hidden;background:radial-gradient(ellipse at 48% 46%,#fff1bd 0%,#d6f0e4 43%,#bfe3ed 100%);box-shadow:inset 0 0 0 1px #ffffff80,inset 0 -18px 40px #6da9a522}#scene{width:100%;height:100%;display:block;outline:none;filter:saturate(1.28) contrast(1.10)}.scene-vignette{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,#ffffff08,transparent 18%,transparent 82%,#4d87951c)}.scene-hint{position:absolute;bottom:13px;left:14px;border-radius:999px;padding:8px 12px;background:#fffaf0f2;border:1px solid #e3d29c;color:#426b59;font-size:10px;font-weight:700;backdrop-filter:blur(8px);box-shadow:0 4px 12px #315b4720}.scene-stamp{position:absolute;top:13px;right:14px;color:#356b5a;font:900 9px Nunito,sans-serif;letter-spacing:.18em;background:#fffdf2ed;border:1px solid #fff;border-radius:99px;padding:7px 10px;box-shadow:0 4px 12px #315b4718}.fallback-map{display:none;position:absolute;inset:0;align-content:center;justify-content:center;grid-template-columns:repeat(3,115px);gap:9px}.fallback-map button{border:0;background:#e5eee3;aspect-ratio:1.12;clip-path:polygon(25% 4%,75% 4%,100% 50%,75% 96%,25% 96%,0 50%);font-weight:800;color:#466856;font-size:12px;padding:15px}.fallback-map button.selected{background:#e9c58c}
+.island-legend{display:flex;gap:7px;overflow-x:auto;padding:4px 17px 17px;scrollbar-width:thin}.legend-btn{display:flex;align-items:center;gap:7px;white-space:nowrap;border:1px solid #e8e5dc;background:#fff;border-radius:999px;padding:7px 10px;color:#6f7d73;font-size:10px;font-weight:700}.legend-btn .swatch{width:8px;height:8px;border-radius:50%;background:var(--c)}.legend-btn:hover,.legend-btn.active{border-color:#a9c0ae;background:#edf4ec;color:#365b49}
+.side-card{display:flex;flex-direction:column;min-height:600px}.side-head{padding:19px 19px 13px;border-bottom:1px solid #efede6}.side-headline{display:flex;align-items:center;justify-content:space-between;gap:10px}.result-count{font:900 11px Nunito,sans-serif;color:#789084;background:#eef3eb;border-radius:999px;padding:6px 9px}.active-context{font-size:11px;color:#8a958e;margin-top:8px;line-height:1.5}.task-list{padding:10px 12px;overflow:auto;max-height:355px;min-height:170px}.task-item{width:100%;display:block;text-align:left;border:1px solid transparent;border-radius:13px;background:transparent;padding:11px 10px;margin:2px 0;color:inherit;transition:.16s}.task-item:hover{background:#f7f7f0;border-color:#ece9df;transform:translateX(2px)}.task-item.selected{background:#f0f5ed;border-color:#d4e2d2}.task-row{display:flex;align-items:center;gap:8px}.task-badge{font-size:9px;font-weight:800;padding:4px 7px;border-radius:7px;background:#edf1e8;color:#66806f;white-space:nowrap}.task-badge.common{background:#f8eee0;color:#a7754b}.task-badge.monthly{background:#e9f0f5;color:#5c7c95}.task-badge.adhoc{background:#f4e9ee;color:#9b6d7d}.task-name{font-size:12px;font-weight:800;line-height:1.55;flex:1}.task-deadline{font-size:10px;color:#8a968e;margin-top:5px;padding-left:1px}.priority{font-size:9px;color:#b45f4e;background:#f9e9e3;border-radius:6px;padding:3px 6px;white-space:nowrap}.empty{padding:28px 15px;text-align:center;color:#91a097;font-size:12px;line-height:1.8}
+.detail{margin:auto 12px 12px;border:1px solid #e9e5da;background:linear-gradient(145deg,#fcfbf5,#f4f5ed);border-radius:16px;padding:14px 15px}.detail-top{display:flex;align-items:center;justify-content:space-between;gap:8px}.detail h3{font-size:14px;margin:8px 0 10px;line-height:1.5}.detail p{margin:0;color:#78877d;font-size:11px;line-height:1.75}.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.detail-cell{background:#ffffffb8;border:1px solid #edece4;border-radius:10px;padding:8px 9px;min-width:0}.detail-cell small{display:block;color:#9aa49b;font-size:9px;margin-bottom:4px}.detail-cell b{display:block;color:#526c5d;font-size:10px;line-height:1.5;overflow-wrap:anywhere}.detail-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px;color:#9aa39b;font-size:9px}.copy-btn{border:0;background:#e5eee4;color:#476a56;border-radius:8px;padding:7px 10px;font-size:10px;font-weight:800}.copy-btn:hover{background:#d6e7d6}
+.bottom-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:15px;margin-top:16px}.info-card{background:#ffffffb8;border:1px solid #e5e2d8;border-radius:18px;padding:16px 18px}.info-card h3{font-size:13px;margin:0 0 10px}.info-card p{font-size:11px;line-height:1.8;color:#77877d;margin:0}.key-list{display:flex;gap:7px;flex-wrap:wrap}.key-pill{font-size:10px;color:#718077;background:#f0f3eb;border-radius:999px;padding:7px 10px}.key-pill b{color:#456d5b}.footnote{margin:20px 5px 0;display:flex;justify-content:space-between;gap:15px;color:#98a198;font-size:9px;line-height:1.7}.footnote strong{color:#718479}.hide-map .workspace{grid-template-columns:1fr}.hide-map .map-card{display:none}.hide-map .side-card{min-height:680px}.hide-map .task-list{max-height:480px}
+.toast{position:fixed;left:50%;bottom:25px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#315b4b;color:white;border-radius:999px;padding:10px 16px;font-size:12px;box-shadow:0 9px 28px #2b514236;transition:.25s;z-index:30}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:1000px){.workspace{grid-template-columns:1fr}.side-card{min-height:520px}.task-list{max-height:300px}.hero{align-items:flex-start;flex-direction:column}.hero-stats{justify-content:flex-start}.scene-wrap{height:450px}}
+@media(max-width:620px){.shell{padding:14px 12px 28px}.topbar{align-items:flex-start}.date-chip{display:none}.brand-title{font-size:15px}.hero h1{font-size:32px}.controlbar{padding:10px}.search{flex-basis:100%}.scene-wrap{height:380px;margin:0 6px 6px}.map-head{padding:15px 14px 4px}.map-head h2{font-size:16px}.map-actions .tiny-btn:nth-child(2){display:none}.side-card{min-height:560px}.bottom-grid{grid-template-columns:1fr}.detail-grid{grid-template-columns:1fr 1fr}.footnote{flex-direction:column}.fallback-map{grid-template-columns:repeat(3,90px)}}
+
+/* v1.3 readability + color correction */
+:root{--ink:#000000}
+body{color:#000000}
+.brand-sub,.date-chip,.live-chip,.outline-btn,.hero p,.stat small,
+.tab,.search:before,.month-label,.month-btn,.map-head p,.section-kicker,
+.tiny-btn,.scene-hint,.island-legend .legend-btn,.active-context,
+.task-deadline,.detail p,.detail-cell small,.detail-foot,.info-card p,
+.key-pill,.footnote,.empty{color:#000000!important}
+.task-name,.task-item,.detail h3,.detail-cell b,.info-card h3,
+.map-head h2,.side-head h2,.brand-title,.hero h1{color:#000000}
+.task-badge{color:#000000}
+.result-count{color:#000000}
+.legend-btn{color:#000000}
+
+
+/* v1.8: vivid miniature city + high-legibility typography */
+:root{
+  --ink:#000000 !important;
+  --muted:#000000 !important;
+  --green:#315f49;
+  --deep:#173f30;
+}
+html,body,.shell,.main,.content,.side-card,.map-card{
+  color:#000000 !important;
+}
+body{
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+p,small,label,caption,span,li,
+.brand-sub,.date-chip,.live-chip,.outline-btn,.hero p,.stat small,
+.tab,.month-label,.month-btn,.map-head p,.section-kicker,.tiny-btn,
+.scene-hint,.island-legend .legend-btn,.active-context,.task-deadline,
+.detail p,.detail-cell small,.detail-foot,.info-card p,.key-pill,
+.footnote,.empty,.result-count,.task-badge,.search,
+.task-name,.task-item,.detail h3,.detail-cell b,.info-card h3,
+.map-head h2,.side-head h2,.brand-title,.hero h1{
+  color:#000000 !important;
+  opacity:1 !important;
+  text-shadow:none !important;
+}
+button,a,input,select,textarea{
+  color:#000000 !important;
+}
+button{
+  font-weight:750;
+}
+input::placeholder,textarea::placeholder{
+  color:#000000 !important;
+  opacity:.82 !important;
+}
+.scene-hint,.scene-stamp{
+  color:#000000 !important;
+  opacity:1 !important;
+  background:#fffdf2 !important;
+  border-color:#222222 !important;
+}
+.scene-hint{font-weight:900 !important}
+.scene-stamp{font-weight:950 !important}
+#scene{
+  filter:saturate(1.42) contrast(1.14) brightness(1.015) !important;
+}
+
+
+/* v1.9 compact masthead and controls */
+.shell{padding:12px 22px 28px}
+.topbar{gap:10px;margin-bottom:8px}
+.brand{gap:9px}
+.brandmark{width:36px;height:36px;font-size:17px}
+.brand-title{font-size:16px}
+.brand-sub{font-size:8px;letter-spacing:.16em;margin-top:0}
+.top-actions{gap:6px}
+.date-chip,.live-chip{padding:6px 10px;font-size:11px}
+.outline-btn{padding:6px 11px;font-size:11px}
+.hero{align-items:center;gap:14px;margin:5px 2px 10px}
+.eyebrow{font-size:8px;letter-spacing:.18em;margin-bottom:2px}
+.hero h1{font-size:clamp(23px,2.5vw,34px);line-height:1.12}
+.hero p{font-size:11px;line-height:1.5;margin:5px 0 0;max-width:720px}
+.hero-stats{gap:6px;flex-wrap:nowrap}
+.stat{min-width:76px;border-radius:12px;padding:6px 9px}
+.stat b{font-size:18px}
+.stat small{font-size:9px}
+.controlbar{gap:8px;padding:7px 10px;margin-bottom:8px;border-radius:14px}
+.tabs{gap:3px}
+.tab{padding:6px 9px;font-size:11px;border-radius:9px}
+.search{min-width:min(250px,100%);flex-basis:290px}
+.search input{padding:7px 10px 7px 30px;font-size:11px;border-radius:10px}
+.search:before{left:10px;top:1px;font-size:20px}
+.monthbar{padding:1px 2px 8px}
+.month-btn{padding:5px 9px;font-size:10px}
+.footnote{gap:8px;font-size:10px}
+.visitor-counter{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;
+  padding:5px 9px;border:1px solid #e6e1d6;border-radius:999px;
+  background:#fffdf8b8;color:#718078;font-size:10px;font-weight:700}
+.visitor-counter strong{color:#456d5b;font-variant-numeric:tabular-nums}
+@media(max-width:900px){
+ .shell{padding:10px 12px 24px}
+ .hero{align-items:flex-start;flex-direction:column}
+ .hero-stats{width:100%;justify-content:flex-start}
+ .stat{flex:1}
+ .topbar{align-items:flex-start}
+ .top-actions{flex-wrap:wrap;justify-content:flex-end}
+}
+@media(max-width:600px){
+ .brand-sub{display:none}
+ .brand-title{font-size:14px}
+ .brandmark{width:32px;height:32px}
+ .live-chip{display:none}
+ .date-chip{font-size:10px;padding:5px 8px}
+ .top-actions .outline-btn{font-size:10px;padding:5px 8px}
+ .hero h1{font-size:25px}
+ .hero p{font-size:11px}
+ .controlbar{align-items:stretch}
+ .tabs{width:100%;justify-content:space-between}
+ .tab{padding:6px 7px;font-size:10px}
+ .search{flex:1 1 100%;min-width:0}
+ #viewToggle{align-self:flex-end}
+ .visitor-counter{border-radius:10px}
+}
+
+
+/* v1.10 requested typography adjustments */
+.hero h1{font-size:clamp(9.2px,1vw,13.6px)!important;line-height:1.2!important}
+@media(max-width:600px){.hero h1{font-size:10px!important}}
+
+
+/* v1.11 workspace proportions and scene framing */
+.workspace{grid-template-columns:minmax(0,2.35fr) minmax(300px,1fr)!important;gap:12px}
+.map-card{min-width:0}
+.side-card{min-width:0}
+@media(min-width:1001px){
+  .scene-wrap{height:560px}
+  .map-head{padding-left:20px;padding-right:16px}
+}
+@media(max-width:1000px){
+  .workspace{grid-template-columns:minmax(0,1fr)!important}
+  .scene-wrap{height:450px}
+}
+@media(max-width:620px){
+  .workspace{grid-template-columns:minmax(0,1fr)!important}
+  .scene-wrap{height:380px}
+}
+
+</style>
+</head>
+<body>
+<div class="shell" id="app">
+  <header class="topbar">
+    <div class="brand"><div class="brandmark">時</div><div><div class="brand-title">臺中人事時序島</div><div class="brand-sub">HR TIME ISLAND · PEOPLE & RHYTHM</div></div></div>
+    <div class="top-actions"><div class="live-chip"><span class="live-dot"></span>年度行事曆資訊站</div><div class="date-chip" id="today"></div><button class="outline-btn" id="guideBtn">操作導覽　?</button></div>
+  </header>
+  <section class="hero">
+    <div><div class="eyebrow">A LITTLE CITY FOR HR ROUTINES</div><h1>把人事日常，<span>拼成一座島。</span></h1><p>用一座溫暖的微縮城市，探索臺中市政府各機關學校的人事業務節奏。選月份、逛主題島、搜尋待辦事項，讓年度工作一眼就有方向。</p></div>
+    <div class="hero-stats"><div class="stat"><b id="countCommon">26</b><small>每月共同事項</small></div><div class="stat"><b id="countMonthly">41</b><small>每月個別事項</small></div><div class="stat"><b id="countAdhoc">5</b><small>不定時事項</small></div></div>
+  </section>
+  <section class="controlbar">
+    <div class="tabs" id="bucketTabs"><button class="tab active" data-bucket="all">全部事項</button><button class="tab" data-bucket="common">每月共同</button><button class="tab" data-bucket="monthly">每月個別</button><button class="tab" data-bucket="adhoc">不定時辦理</button></div>
+    <label class="search"><input id="searchInput" type="search" placeholder="搜尋事項、關鍵字、表單、承辦人…" autocomplete="off" /></label>
+    <button class="outline-btn" id="viewToggle">切換清單模式</button>
+  </section>
+  <nav class="monthbar" id="monthbar"><span class="month-label">年度節奏</span><button class="month-btn all" data-month="all">全年</button></nav>
+  <main class="workspace" id="workspace">
+    <section class="map-card">
+      <div class="map-head"><div><div class="section-kicker">THE HR ARCHIPELAGO</div><h2>人事業務 3D 城市全景</h2><p>點選島嶼探索主題；拖曳旋轉、滾輪縮放，從不同角度看年度工作。</p></div><div class="map-actions"><button class="tiny-btn" id="resetCamera">重置視角</button><button class="tiny-btn" id="allIslands">顯示全部島嶼</button></div></div>
+      <div class="scene-wrap"><canvas id="scene" aria-label="可旋轉的人事業務六角島3D城市"></canvas><div class="scene-vignette"></div><div class="scene-stamp">ISOMETRIC MINIATURE WORLD</div><div class="scene-hint">✦ 拖曳旋轉　·　滾輪縮放　·　點選島嶼探索</div><div class="fallback-map" id="fallbackMap"></div></div>
+      <div class="island-legend" id="islandLegend"></div>
+    </section>
+    <section class="side-card">
+      <div class="side-head"><div class="side-headline"><div><div class="section-kicker">YOUR HR CHECKLIST</div><h2 id="listTitle">本月人事待辦</h2></div><span class="result-count" id="resultCount">0 項</span></div><div class="active-context" id="contextText">每月共同事項會與所選月份的個別事項一起呈現。</div></div>
+      <div class="task-list" id="taskList"></div>
+      <div class="detail" id="detail"><div class="detail-top"><span class="task-badge">島嶼導覽</span><span class="section-kicker">QUICK VIEW</span></div><h3>選一項事項，展開辦理資訊</h3><p>可查看辦理期限、填報方式、承辦窗口及原始 PDF 頁碼。重要的事件時效也會特別標示。</p></div>
+    </section>
+  </main>
+  <section class="bottom-grid">
+    <div class="info-card"><h3>怎麼使用這座島？</h3><div class="key-list"><span class="key-pill"><b>① 選月份</b>　切換年度節奏</span><span class="key-pill"><b>② 點島嶼</b>　依業務主題篩選</span><span class="key-pill"><b>③ 點事項</b>　展開期限與承辦資訊</span><span class="key-pill"><b>④ 搜尋</b>　用關鍵字快速定位</span></div></div>
+    <div class="info-card"><h3>資料閱讀提醒</h3><p>「每月共同」依原行事曆獨立列示；「每月個別」依原表月份與期程呈現；「不定時」依通知、案件或組織異動啟動。遇「函知填報」或節慶、開學等浮動期程，仍以最新正式通知及實際日期為準。</p></div>
+  </section>
+  <footer class="footnote"><span class="visitor-counter" id="visitorCounter" title="僅統計此瀏覽器的本機紀錄；不同裝置或瀏覽器不會合併，並非全站即時統計。">👥 累積使用 <strong id="uniqueUsers">00</strong> 人・🔥 累計造訪 <strong id="visitCount">00</strong> 次 <small>（本機統計）</small></span><span><strong>臺中市太平區戶政事務所 林慶修 製作</strong>　｜　<strong>資料來源：</strong>《臺中市政府各機關學校人事業務電子行事曆》（使用者提供 PDF，共 6 頁）。</span><span>版本 v1.11　·　資料依來源文件整理，非即時串接官方系統。</span></footer>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const DATA = {"islands":[{"id":"org","name":"組織規劃島","en":"ORGANIZATION ISLAND","desc":"組織編制、員額管理、職務歸系及職務規劃。","color":"#F0A52F","icon":"🏛️"},{"id":"manpower","name":"人力資源島","en":"HUMAN RESOURCES","desc":"考試分發、任免遷調、人才進用及聘僱人力管理。","color":"#E89A42","icon":"🧑‍🤝‍🧑"},{"id":"training","name":"考核培訓島","en":"PERFORMANCE & LEARNING","desc":"考核獎懲、差勤管理、教育訓練及公務人員保障服務。","color":"#F0785E","icon":"🏆"},{"id":"welfare","name":"退撫福利島","en":"PENSION & BENEFITS","desc":"待遇薪酬、退休撫卹、保險、福利補助及員工協助。","color":"#23B89A","icon":"💠"},{"id":"info","name":"人事資訊島","en":"HR INFORMATION","desc":"人事資訊系統、資料維護、通訊名冊及相關資訊作業。","color":"#438FDE","icon":"💻"},{"id":"general","name":"綜合業務島","en":"GENERAL AFFAIRS","desc":"跨科協辦、綜合調查、特殊專案及不易歸類的業務。","color":"#AA69D2","icon":"🧭"}],"tasks":[{"id":"C01","name":"職務歸系調整情形月報表","bucket":"common","group":"org","deadline":"每月 5 日前","detail":"一級機關及區公所至本處 eDOPTC 人事服務網－調查表填報。","method":"文號 1100000086","owner":"魏小姐","ext":"17109","page":1,"months":null,"flag":""},{"id":"C02","name":"D5：組織員額管理系統填報","bucket":"common","group":"org","deadline":"每月 5 日前","detail":"各機關學校至總處 eCPA 人事服務網－D5 組織員額管理系統，填報「各機關現有員額調查表」。","method":"總處 eCPA－D5","owner":"林小姐","ext":"17212","page":1,"months":null,"flag":""},{"id":"C03","name":"D5 現有員額調查表查核資料上傳","bucket":"common","group":"org","deadline":"每月 5 日前","detail":"各機關學校至本處 eDOPTC 人事服務網－調查表，上傳 D5 查核及佐證資料。","method":"文號 1100000120","owner":"林小姐","ext":"17212","page":1,"months":null,"flag":""},{"id":"C04","name":"各類人員現有員額統計月報表","bucket":"common","group":"org","deadline":"每月 5 日前","detail":"各機關學校至本處 eDOPTC 人事服務網－調查表填報。","method":"文號 1100000087","owner":"林小姐","ext":"17212","page":1,"months":null,"flag":""},{"id":"C05","name":"A4 調查表系統線上填報","bucket":"common","group":"org","deadline":"每月 5 日前","detail":"至總處 eCPA 人事服務網－A4 調查表系統，填報「進用身心障礙調查表」及「原住民情形調查表」。","method":"總處 eCPA－A4","owner":"王小姐","ext":"17206","page":1,"months":null,"flag":""},{"id":"C06","name":"用人費用管理資訊系統線上填報","bucket":"common","group":"welfare","deadline":"每月 5／15／20 日前","detail":"WebHR 待遇資料每月 5 日前上傳；線上填報每月 15 日前；校對完畢每月 20 日前。","method":"WebHR 待遇資料上傳或 AF 系統線上申報","owner":"王小姐","ext":"17404","page":1,"months":"","flag":"分段期限"},{"id":"C07","name":"人事人員獎懲建議案件","bucket":"common","group":"training","deadline":"每月 10 日前","detail":"彙填「臺中市政府人事處及所屬人事人員獎懲建議清冊」，電子公文函送本處彙辦；二級機關由一級機關彙整，學校由教育局彙整。","method":"獎懲建議清冊／電子公文","owner":"曾小姐","ext":"17113","page":1,"months":null,"flag":""},{"id":"C08","name":"繳納退撫基金費用及網路傳輸","bucket":"common","group":"welfare","deadline":"每月 10 日前","detail":"依月辦理退撫基金費用繳納及網路傳輸。","method":"退撫基金繳納作業","owner":"柯小姐","ext":"17409","page":1,"months":null,"flag":""},{"id":"C09","name":"月退休金、遺屬金及月撫卹金發放","bucket":"common","group":"welfare","deadline":"每月 10 日後","detail":"至全國公教人員退休撫卹整合平臺產製發放清冊並確認發放。","method":"全國公教人員退休撫卹整合平臺","owner":"柯小姐／教育局","ext":"17409／55722–55724","page":1,"months":null,"flag":""},{"id":"C10","name":"退休人員退撫資料維護","bucket":"common","group":"welfare","deadline":"每月月底","detail":"至全國公教人員退休撫卹整合平臺更新退撫人員基本資料。","method":"全國公教人員退休撫卹整合平臺","owner":"柯小姐／教育局","ext":"17409／55723","page":1,"months":null,"flag":""},{"id":"C11","name":"退休、撫卹及生活津貼預算不足申請撥補","bucket":"common","group":"welfare","deadline":"不定時","detail":"退休金、撫卹金及生活津貼等預算經費不足時，依教育局局網調查表填報系統辦理撥補調查。","method":"教育局局網調查表填報系統","owner":"教育局","ext":"55722／55723","page":1,"months":null,"flag":"事件觸發"},{"id":"C12","name":"實際發放退休、撫慰、資遣、撫卹經費調查","bucket":"common","group":"welfare","deadline":"每月 25 日前","detail":"至本處 eDOPTC 人事服務網－調查表填報。","method":"文號 1100000007","owner":"曹先生","ext":"17407","page":1,"months":null,"flag":""},{"id":"C13","name":"職員通訊錄資料更新","bucket":"common","group":"info","deadline":"人員異動日起 3 個工作日內","detail":"人員發生異動後，更新本處 eDOPTC 人事服務網－職員通訊錄資料。","method":"本處 eDOPTC－職員通訊錄","owner":"石先生","ext":"17503","page":1,"months":null,"flag":"異動時效"},{"id":"C14","name":"天然災害停班停課通報聯繫名冊","bucket":"common","group":"info","deadline":"人員異動日起 2 個工作日內","detail":"人員異動後，至本處 eDOPTC 人事服務網－調查表更新通報聯繫名冊。","method":"文號 1100000177","owner":"簡小姐","ext":"17304","page":1,"months":null,"flag":"異動時效"},{"id":"C15","name":"性騷擾及職場霸凌申訴管道調查表","bucket":"common","group":"general","deadline":"人員異動日起 2 個工作日內","detail":"人員異動後，更新本處 eDOPTC 人事服務網－調查表所列申訴管道。","method":"文號 1100000178","owner":"蔣小姐／胡小姐","ext":"17306／17308","page":1,"months":null,"flag":"異動時效"},{"id":"C16","name":"性騷擾申訴案件通報","bucket":"common","group":"general","deadline":"接獲申訴事件 24 小時內","detail":"逐級通報，並同時以電話通知相關承辦人。","method":"性騷擾申訴案件通報單","owner":"蔣小姐","ext":"17306","page":1,"months":null,"flag":"24 小時時效"},{"id":"C17","name":"職場霸凌申訴案件通報","bucket":"common","group":"general","deadline":"接獲申訴事件 24 小時內","detail":"逐級通報，並同時以電話通知相關承辦人。","method":"職場霸凌申訴案件通報單","owner":"胡小姐","ext":"17308","page":1,"months":null,"flag":"24 小時時效"},{"id":"C18","name":"四類臨時人力管理系統線上填報","bucket":"common","group":"manpower","deadline":"人員異動 30 日內","detail":"適用聘用人員、約僱人員、業務助理及約用人員等四類人員，至本處 eDOPTC 人事服務網－臨時人力系統填報。","method":"本處 eDOPTC－臨時人力","owner":"廖小姐／李小姐","ext":"17204／17208","page":2,"months":null,"flag":"異動時效"},{"id":"C19","name":"公務員經營商業及兼職情形自行清查","bucket":"common","group":"manpower","deadline":"新進到職時；現職定期（每年或間年）","detail":"各機關學校自行控管，毋須報送；新進人員於到職時填具，現職人員依規定定期填具。","method":"公務員經營商業及兼職情形調查表","owner":"李小姐","ext":"17208","page":2,"months":null,"flag":""},{"id":"C20","name":"人員英語能力專長登錄","bucket":"common","group":"training","deadline":"通過測驗或符合學歷條件時","detail":"人員通過英語能力測驗，或具英文（語）相關系所／輔系等資格而尚未參加測驗者，應依規定登錄。","method":"WebHR－個人資料子系統－表 51 專長","owner":"王小姐","ext":"17206","page":2,"months":null,"flag":""},{"id":"C21","name":"退休案件申請","bucket":"common","group":"welfare","deadline":"退休生效日前 1 至 3 個月","detail":"備妥退休事實表、退撫基金資料卡、退休公務人員最後在職同等級人員現職待遇計算表及相關證件表冊。","method":"退休案件申請表冊","owner":"曹先生／游小姐／柯小姐／教育局","ext":"17407–17409／55722–55724","page":2,"months":null,"flag":""},{"id":"C22","name":"職務出缺填報系統","bucket":"common","group":"org","deadline":"職務出缺、補實時（含預估缺）","detail":"至本處 eDOPTC 人事服務網－職務出缺填報。","method":"本處 eDOPTC－職務出缺","owner":"王小姐／王先生","ext":"17205／17207","page":2,"months":null,"flag":""},{"id":"C23","name":"服務獎章線上請頒","bucket":"common","group":"training","deadline":"退休（職）、資遣、辭職或死亡時","detail":"公教人員退休（職）、資遣、辭職或死亡時，線上作業免送紙本；學校由各校線上報送教育局初審，再層轉本府複審及核頒。","method":"服務獎章線上請頒系統","owner":"王小姐","ext":"17309","page":2,"months":null,"flag":""},{"id":"C24","name":"三節慰問金及早期支領一次退休金三節照護金","bucket":"common","group":"welfare","deadline":"春節、端午及中秋節 20 日前","detail":"至全國公教人員退休撫卹整合平臺產製發放清冊，並至本處 eDOPTC 人事服務網－調查表填報發放情形。","method":"文號 1100000046","owner":"游小姐","ext":"17408","page":2,"months":null,"flag":""},{"id":"C25","name":"服務滿 40 年以上現職人員調查表","bucket":"common","group":"training","deadline":"每月 15 日前","detail":"填報次月符合資格之現職人員調查表。","method":"文號 1100000167","owner":"游小姐","ext":"17408","page":2,"months":null,"flag":""},{"id":"C26","name":"退撫給與專戶入帳清冊","bucket":"common","group":"welfare","deadline":"每月 20 日前","detail":"依期完成退撫給與專戶入帳清冊相關作業。","method":"退撫給與專戶入帳清冊","owner":"柯小姐","ext":"17409","page":2,"months":null,"flag":""},{"id":"M01","name":"公務人員行政中立訓練計畫執行情形報告","bucket":"monthly","group":"training","deadline":"1 月 1 日前（函知填報）","detail":"至本處 eDOPTC 人事服務網－調查表填報公務人員行政中立訓練統計表。","method":"文號 1100000138","owner":"田小姐","ext":"17312","page":2,"months":[1],"flag":""},{"id":"M02","name":"函報前一年度公務人員年終考績案","bucket":"monthly","group":"training","deadline":"1 月（函知報核）","detail":"逕報銓敘部銓敘業務網路作業系統；學校依教育局規定辦理。","method":"銓敘部銓敘業務網路作業系統","owner":"王小姐","ext":"17309","page":2,"months":[1],"flag":""},{"id":"M03","name":"公務人員因公涉訟輔助案件及處理情形統計","bucket":"monthly","group":"general","deadline":"每年 1 月及 7 月中旬（函請填復）","detail":"填報各機關受理公務人員因公涉訟輔助案件及處理情形統計表。","method":"因公涉訟輔助案件及處理情形統計表","owner":"胡小姐","ext":"17308","page":2,"months":[1,7],"flag":""},{"id":"M04","name":"建置職務代理名冊（半年 1 次）","bucket":"monthly","group":"org","deadline":"每年 1、7 月 25 日前","detail":"至 WebHR 人力資源管理資訊系統建置職務代理名冊。","method":"WebHR 人力資源管理資訊系統","owner":"王小姐","ext":"17206","page":2,"months":[1,7],"flag":""},{"id":"M05","name":"運用勞務承攬情形調查表（每季）","bucket":"monthly","group":"manpower","deadline":"每年 1、4、7、10 月（函知填報）","detail":"至總處 eCPA 人事服務網－D7 多元人力填報系統填報。","method":"總處 eCPA－D7 多元人力填報系統","owner":"王小姐","ext":"17206","page":2,"months":[1,4,7,10],"flag":""},{"id":"M06","name":"前一年度 7–12 月工時分析檢討","bucket":"monthly","group":"training","deadline":"1 月 31 日前","detail":"彙整工時過高原因及改善措施、工時過高人員統計分析與關懷情形、勤休制度精進作為及加班時數未完成補償等資料；由一級機關及區公所彙整所屬。","method":"工時分析檢討相關調查表","owner":"簡小姐","ext":"17304","page":3,"months":[1],"flag":""},{"id":"M07","name":"年度因公出國及赴大陸地區工作計畫","bucket":"monthly","group":"org","deadline":"函知申請","detail":"依通知檢附年度因公出國及赴大陸地區工作計畫審核表、詳細計畫書及相關公文影本。","method":"計畫審核表、詳細計畫書及公文影本","owner":"簡小姐","ext":"17304","page":3,"months":[1],"flag":""},{"id":"M08","name":"預借考績獎金","bucket":"monthly","group":"training","deadline":"春節前","detail":"依通知辦理考績獎金預借清冊。","method":"考績獎金預借清冊","owner":"王小姐","ext":"17309","page":3,"months":[1],"flag":""},{"id":"M09","name":"月退休人員年終慰問金","bucket":"monthly","group":"welfare","deadline":"春節 20 日前","detail":"至全國公教人員退休撫卹整合平臺產製發放清冊，並至本處 eDOPTC 人事服務網－調查表填報。","method":"文號 1100000077","owner":"游小姐","ext":"17408","page":3,"months":[1],"flag":""},{"id":"M10","name":"本府模範公務人員選拔","bucket":"monthly","group":"training","deadline":"1–3 月","detail":"依通知辦理模範公務人員推薦。","method":"模範公務人員推薦表","owner":"王小姐","ext":"17309","page":3,"months":[1,2,3],"flag":""},{"id":"M11","name":"子女教育補助費申請（上學期）","bucket":"monthly","group":"welfare","deadline":"開學註冊後至 4 月 10 日前","detail":"依規定檢具子女教育補助費申請表及相關證明文件。","method":"子女教育補助費申請表","owner":"陳小姐","ext":"17406","page":3,"months":[2,3,4],"flag":""},{"id":"M12","name":"退休人員優惠存款差額利息臺灣銀行計息校對","bucket":"monthly","group":"welfare","deadline":"3 月底前（函知辦理）","detail":"至全國公教人員退休撫卹整合平臺辦理優惠存款差額利息計息校對。","method":"全國公教人員退休撫卹整合平臺","owner":"柯小姐","ext":"17409","page":3,"months":[2,3],"flag":""},{"id":"M13","name":"申報年度聘僱、約用人員及業務助理計畫","bucket":"monthly","group":"manpower","deadline":"函知申報","detail":"申報聘（僱）人員聘（僱）計畫書、次年度與本年度對照表及聘僱計畫檢討報告表。","method":"聘僱計畫書、年度對照表及檢討報告","owner":"廖小姐／李小姐","ext":"17204／17208","page":3,"months":[2,3],"flag":""},{"id":"M14","name":"填報下一年度申請退休人員","bucket":"monthly","group":"welfare","deadline":"3 月上旬前（函知填報）","detail":"使用 RTCMPT 公教人員退休撫卹試算系統填報。","method":"RTCMPT 公教人員退休撫卹試算系統","owner":"曹先生","ext":"17407","page":3,"months":[3],"flag":""},{"id":"M15","name":"性騷擾申訴案件調查表（季報）","bucket":"monthly","group":"general","deadline":"每年 3、6、9、12 月底前（函知填報）","detail":"一級機關及區公所彙整所屬填報性騷擾申訴案件調查表。","method":"性騷擾申訴案件調查表","owner":"蔣小姐","ext":"17306","page":3,"months":[3,6,9,12],"flag":""},{"id":"M16","name":"請託關說登錄、查察獎懲及酒駕懲處情形統計","bucket":"monthly","group":"general","deadline":"每年 3、6、9、12 月底前（函知填報）","detail":"至本處 eDOPTC 人事服務網－調查表填報統計。","method":"文號 1100000131","owner":"胡小姐","ext":"17308","page":3,"months":[3,6,9,12],"flag":""},{"id":"M17","name":"職場霸凌申訴案件調查表（季報）","bucket":"monthly","group":"general","deadline":"每年 3、6、9、12 月底前（函知填報）","detail":"一級機關及區公所彙整所屬填報職場霸凌申訴案件調查表。","method":"職場霸凌申訴案件調查表","owner":"胡小姐","ext":"17308","page":3,"months":[3,6,9,12],"flag":""},{"id":"M18","name":"前一年度公務人員考績考列丙等人員調查","bucket":"monthly","group":"training","deadline":"每年 3 月底至 4 月上旬（函知調查）","detail":"依通知調查前一年度公務人員考績考列丙等人員。","method":"前一年度公務人員考績考列丙等人員調查表","owner":"王小姐","ext":"17309","page":3,"months":[3,4],"flag":""},{"id":"M19","name":"人事人員平時考核紀錄","bucket":"monthly","group":"training","deadline":"每年 4、8 月","detail":"填報人事人員平時考核紀錄。","method":"公務人員平時考核紀錄表","owner":"廖小姐","ext":"17112","page":3,"months":[4,8],"flag":""},{"id":"M20","name":"公務人員平時考核紀錄","bucket":"monthly","group":"training","deadline":"每年 4、8 月","detail":"辦理公務人員平時考核紀錄。","method":"公務人員平時考核紀錄表","owner":"王小姐","ext":"17309","page":3,"months":[4,8],"flag":""},{"id":"M21","name":"性別主流化及 CEDAW 教育訓練參訓情形","bucket":"monthly","group":"general","deadline":"每年 5、9、11 月初","detail":"填報性別主流化訓練情形調查表及 CEDAW 教育訓練情形調查表；二級機關由一級機關彙整。","method":"性別主流化及 CEDAW 教育訓練調查表","owner":"蔣小姐","ext":"17306","page":3,"months":[5,9,11],"flag":""},{"id":"M22","name":"政府捐助財團法人及基金轉投資事業概況表","bucket":"monthly","group":"general","deadline":"每年 6、12 月底前","detail":"至銓敘部銓敘業務網路作業系統填報。","method":"銓敘部銓敘業務網路作業系統","owner":"柯小姐","ext":"17409","page":3,"months":[6,12],"flag":""},{"id":"M23","name":"當年度 1–6 月工時分析檢討","bucket":"monthly","group":"training","deadline":"7 月 31 日前","detail":"彙整工時過高原因及改善措施、工時過高人員統計分析與關懷情形、勤休制度精進作為及加班時數未完成補償等資料；由一級機關及區公所彙整所屬。","method":"工時分析檢討相關調查表","owner":"簡小姐","ext":"17304","page":4,"months":[7],"flag":""},{"id":"M24","name":"人事業務績效考核成果報告（機關）","bucket":"monthly","group":"training","deadline":"8 月中旬","detail":"一級機關及區公所報送本年度人事業務績效考核成果報告。","method":"人事業務績效考核成果報告","owner":"廖小姐","ext":"17112","page":4,"months":[8],"flag":""},{"id":"M25","name":"校長、教師及專任運動教練成績考核","bucket":"monthly","group":"training","deadline":"每年 8 月","detail":"學校辦理校長、教師、專任運動教練成績考核，檢附考核清冊及相關佐證資料。","method":"考核清冊暨相關佐證資料","owner":"教育局","ext":"55732／55733","page":4,"months":[8],"flag":""},{"id":"M26","name":"各學校填報次一年度預算員額","bucket":"monthly","group":"org","deadline":"每年 8 月","detail":"各學校至總處 eCPA 人事服務網－D5 組織員額管理系統填報次一年度預算員額。","method":"總處 eCPA－D5 組織員額管理系統","owner":"教育局","ext":"55712／55714","page":4,"months":[8],"flag":""},{"id":"M27","name":"性別主流化及 CEDAW 教育訓練執行成果","bucket":"monthly","group":"general","deadline":"8 月 31 日前","detail":"一級機關及區公所至本處 eDOPTC 人事服務網－調查表報送執行成果。","method":"文號 1100000118","owner":"蔣小姐","ext":"17306","page":4,"months":[8],"flag":""},{"id":"M28","name":"各學校報送本年度人事業務績效考核成果","bucket":"monthly","group":"training","deadline":"9 月初","detail":"各學校報送本年度人事業務績效考核成果報告。","method":"人事業務績效考核成果報告","owner":"教育局","ext":"55711","page":4,"months":[9],"flag":""},{"id":"M29","name":"子女教育補助費申請（下學期）","bucket":"monthly","group":"welfare","deadline":"開學註冊後至 10 月 25 日前","detail":"依規定檢具子女教育補助費申請表及相關證明文件。","method":"子女教育補助費申請表","owner":"陳小姐","ext":"17406","page":4,"months":[9,10],"flag":""},{"id":"M30","name":"終身學習時數執行成果","bucket":"monthly","group":"training","deadline":"每年 9 月初（函知填報）","detail":"一級機關及區公所至本處 eDOPTC 人事服務網－調查表報送年度終身學習時數執行成果。","method":"文號 1100000132","owner":"田小姐","ext":"17312","page":4,"months":[9],"flag":""},{"id":"M31","name":"專任人事人員數位學習組裝課程調查","bucket":"monthly","group":"training","deadline":"每年 9 月初（函知填報）","detail":"報送專任人事人員（警職人員除外）完成當年度數位學習組裝課程調查表。","method":"文號 1100000133","owner":"田小姐","ext":"17312","page":4,"months":[9],"flag":""},{"id":"M32","name":"年度推動終身學習有功主辦人員調查","bucket":"monthly","group":"training","deadline":"每年 10 月初（函知填報）","detail":"至本處 eDOPTC 人事服務網－調查表填報年度推動終身學習有功主辦人員。","method":"文號 1100000134","owner":"田小姐","ext":"17312","page":5,"months":[10],"flag":""},{"id":"M33","name":"早期支領一次退休金三節照護金審核","bucket":"monthly","group":"welfare","deadline":"約 11 月中旬（函知報核）","detail":"依通知檢附申請照護事實表、照護清冊及複審查核清冊。","method":"申請照護事實表、照護清冊及複審查核清冊","owner":"游小姐／教育局","ext":"17408／55723","page":5,"months":[11],"flag":""},{"id":"M34","name":"機關首長公務人員年終考績表","bucket":"monthly","group":"training","deadline":"約 12 月初（函知報核）","detail":"報送機關首長公務人員年終考績表。","method":"公務人員考績表","owner":"王小姐","ext":"17309","page":5,"months":[12],"flag":""},{"id":"M35","name":"當年度人事人員年終考績","bucket":"monthly","group":"training","deadline":"12 月（函知辦理）","detail":"辦理當年度人事人員年終考績。","method":"公務人員考績表","owner":"廖小姐","ext":"17112","page":5,"months":[12],"flag":""},{"id":"M36","name":"聘僱、約用人員及業務助理年終成績考核","bucket":"monthly","group":"manpower","deadline":"12 月（機關自辦；學校依通知）","detail":"辦理當年度聘僱人員、約用人員及業務助理年終成績考核。","method":"聘僱人員年終成績考核表、清冊","owner":"廖小姐／李小姐","ext":"17204／17208","page":5,"months":[12],"flag":""},{"id":"M37","name":"當年度公務人員年終考績及甲等比率彙整","bucket":"monthly","group":"training","deadline":"12 月（函知辦理）","detail":"辦理當年度公務人員年終考績，並彙整考績考列甲等人數比率分配。","method":"考績考列甲等人數比率分配彙整表","owner":"王小姐","ext":"17309","page":5,"months":[12],"flag":""},{"id":"M38","name":"機關推動業務委託民間辦理情形調查","bucket":"monthly","group":"manpower","deadline":"12 月底前","detail":"至總處 eCPA 人事服務網－A4 調查表系統填報。","method":"總處 eCPA－A4 調查表系統","owner":"楊小姐","ext":"17108","page":5,"months":[12],"flag":""},{"id":"M39","name":"核發不休假加班費","bucket":"monthly","group":"training","deadline":"約 12 月底（自動辦理）","detail":"依不休假加班費申請表及核發清冊辦理年度核發作業。","method":"不休假加班費申請表及核發清冊","owner":"簡小姐","ext":"17304","page":5,"months":[12],"flag":""},{"id":"M40","name":"國民旅遊卡休假補助費申請","bucket":"monthly","group":"training","deadline":"12 月底前（自動辦理）","detail":"清查未完成請領補助費人員名冊，並完成所有休假維護登錄。","method":"清查未完成請領補助費人員名冊、休假維護登錄","owner":"簡小姐","ext":"17304","page":5,"months":[12],"flag":""},{"id":"M41","name":"填報次一年度預算員額","bucket":"monthly","group":"org","deadline":"12 月底前","detail":"至總處 eCPA 人事服務網－D5 組織員額管理系統填報次一年度預算員額。","method":"總處 eCPA－D5 組織員額管理系統","owner":"莊小姐／楊小姐／魏小姐","ext":"17107／17108／17109","page":5,"months":[12],"flag":""},{"id":"A01","name":"進用原住民名冊","bucket":"adhoc","group":"manpower","deadline":"不定期（函知填報）","detail":"依通知填報機關進用原住民名冊。","method":"進用原住民名冊","owner":"王小姐","ext":"17206","page":5,"months":null,"flag":"通知觸發"},{"id":"A02","name":"職務歸系檢查表","bucket":"adhoc","group":"org","deadline":"不定時；辦理職務歸系案件時","detail":"機關辦理職務歸系案件，副知本府或區公所；學校案件報送教育局核定時辦理。","method":"職務歸系檢查表","owner":"莊小姐／楊小姐／魏小姐／教育局","ext":"17107–17109／55712／55714","page":5,"months":null,"flag":"案件觸發"},{"id":"A03","name":"WebHR 組織編制資料維護","bucket":"adhoc","group":"info","deadline":"組織規程或編制表修正／訂定後","detail":"組織規程或編制表修正、訂定案經備查或核定後，即時更新 WebHR 組織編制子系統之機關及單位基本資料與編制員額資料。","method":"WebHR 組織編制子系統","owner":"莊小姐／楊小姐／魏小姐／教育局","ext":"17107–17109／55712／55714","page":5,"months":null,"flag":"即時更新"},{"id":"A04","name":"WebHR 人事機構組編資料填報","bucket":"adhoc","group":"info","deadline":"文到 2 日內","detail":"機關編制表修正或訂定案經本府函送銓敘部轉陳考試院備查（學校依核定情形）後，於文到 2 日內至 WebHR 組織編制子系統之人事機構組編案件維護作業填報。","method":"WebHR 組織編制子系統－人事機構組編案件維護","owner":"莊小姐","ext":"17111","page":6,"months":null,"flag":"文到 2 日內"},{"id":"A05","name":"WebHR 任免遷調／聘（僱）用計畫更新","bucket":"adhoc","group":"manpower","deadline":"本府核定後 7 日內","detail":"各機關學校填報聘用及約僱人員計畫，經函送本府核定後 7 日內至 WebHR 任免遷調／聘（僱）用計畫填送更新資料。","method":"WebHR 任免遷調／聘（僱）用計畫","owner":"廖小姐／李小姐","ext":"17204／17208","page":6,"months":null,"flag":"核定後 7 日內"}]};
+const MONTHS = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+const GROUPS = DATA.islands;
+const taskMap = new Map(DATA.tasks.map(t=>[t.id,t]));
+let state = {bucket:'all', month:(new Date().getMonth()+1), island:null, query:'', selectedTask:null, showMap:true};
+const $ = s=>document.querySelector(s);
+const esc = s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function showToast(msg){const el=$('#toast');el.textContent=msg;el.classList.add('show');clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>el.classList.remove('show'),2100)}
+function currentMonthLabel(){return state.month==='all'?'全年':MONTHS[state.month-1]}
+function bucketLabel(b){return b==='common'?'每月共同':b==='monthly'?'每月個別':b==='adhoc'?'不定時':'全部事項'}
+function filteredTasks(){
+  const q=state.query.trim().toLowerCase();
+  return DATA.tasks.filter(t=>{
+    if(state.bucket!=='all' && t.bucket!==state.bucket)return false;
+    if(state.bucket==='all' && state.month!=='all' && t.bucket==='monthly' && !(t.months||[]).includes(state.month))return false;
+    if(state.bucket==='monthly' && state.month!=='all' && !(t.months||[]).includes(state.month))return false;
+    if(state.island && t.group!==state.island)return false;
+    if(q){const hay=[t.name,t.deadline,t.detail,t.method,t.owner,t.ext,t.id].join(' ').toLowerCase();if(!hay.includes(q))return false;}
+    return true;
+  });
+}
+function renderStats(){
+  $('#countCommon').textContent=DATA.tasks.filter(t=>t.bucket==='common').length;
+  $('#countMonthly').textContent=DATA.tasks.filter(t=>t.bucket==='monthly').length;
+  $('#countAdhoc').textContent=DATA.tasks.filter(t=>t.bucket==='adhoc').length;
+  const d=new Date();$('#today').textContent=new Intl.DateTimeFormat('zh-TW',{year:'numeric',month:'long',day:'numeric',weekday:'short'}).format(d);
+}
+function renderMonths(){
+  const host=$('#monthbar');host.innerHTML='<span class="month-label">年度節奏</span><button class="month-btn all '+(state.month==='all'?'active':'')+'" data-month="all">全年</button>'+MONTHS.map((m,i)=>`<button class="month-btn ${state.month===i+1?'active':''}" data-month="${i+1}">${m}</button>`).join('');
+  host.querySelectorAll('[data-month]').forEach(b=>b.addEventListener('click',()=>{state.month=b.dataset.month==='all'?'all':Number(b.dataset.month);state.selectedTask=null;renderAll()}));
+}
+function renderTabs(){document.querySelectorAll('[data-bucket]').forEach(b=>b.classList.toggle('active',b.dataset.bucket===state.bucket));}
+function renderLegend(){
+  const host=$('#islandLegend');host.innerHTML=GROUPS.map(g=>`<button class="legend-btn ${state.island===g.id?'active':''}" data-island="${g.id}" style="--c:${g.color}"><i class="swatch"></i>${esc(g.name)}</button>`).join('');
+  host.querySelectorAll('[data-island]').forEach(b=>b.addEventListener('click',()=>selectIsland(b.dataset.island)));
+}
+function selectIsland(id){state.island=state.island===id?null:id;state.selectedTask=null;renderAll();highlight3D(state.island);}
+function renderList(){
+  const items=filteredTasks();
+  const monthTxt=currentMonthLabel();
+  $('#listTitle').textContent=state.island?GROUPS.find(g=>g.id===state.island).name:(state.bucket==='common'?'每月共同事項':state.bucket==='monthly'?'每月個別事項':state.bucket==='adhoc'?'不定時辦理事項':(state.month==='all'?'全年人事待辦':monthTxt+'人事待辦'));
+  $('#resultCount').textContent=items.length+' 項';
+  let ctx=state.bucket==='common'?'以下列出每月共同應（待）辦事項，不受月份篩選影響。':state.bucket==='adhoc'?'以下列出依通知、案件或組織異動啟動的不定時事項。':state.month==='all'?'顯示全年每月個別事項，並可搭配共同及不定時事項檢視。':`${monthTxt}個別事項 + 每月共同事項；不定時事項可由分類切換檢視。`;
+  if(state.island){const g=GROUPS.find(x=>x.id===state.island);ctx=g.desc+' 點同一島嶼可取消主題篩選。';}
+  if(state.query)ctx='搜尋「'+state.query+'」的結果。 '+ctx;
+  $('#contextText').textContent=ctx;
+  const host=$('#taskList');
+  if(!items.length){host.innerHTML='<div class="empty">沒有找到符合條件的事項。<br>試試其他月份、主題或關鍵字吧。</div>';return;}
+  host.innerHTML=items.map(t=>{
+    const group=GROUPS.find(g=>g.id===t.group);
+    const badge=t.bucket==='common'?'每月共同':t.bucket==='monthly'?'每月個別':'不定時';
+    const flag=t.flag?`<span class="priority">${esc(t.flag)}</span>`:'';
+    return `<button class="task-item ${state.selectedTask===t.id?'selected':''}" data-task="${t.id}"><div class="task-row"><span class="task-badge ${t.bucket}">${badge}</span><span class="task-name">${esc(t.name)}</span>${flag}</div><div class="task-deadline">${esc(t.deadline)}　·　${esc(group.name)}</div></button>`;
+  }).join('');
+  host.querySelectorAll('[data-task]').forEach(b=>b.addEventListener('click',()=>{state.selectedTask=b.dataset.task;renderList();renderDetail(taskMap.get(state.selectedTask));}));
+}
+function renderDetail(t){
+  const el=$('#detail');
+  if(!t){el.innerHTML='<div class="detail-top"><span class="task-badge">島嶼導覽</span><span class="section-kicker">QUICK VIEW</span></div><h3>選一項事項，展開辦理資訊</h3><p>可查看辦理期限、填報方式、承辦窗口及原始 PDF 頁碼。重要的事件時效也會特別標示。</p>';return;}
+  const group=GROUPS.find(g=>g.id===t.group);const type=bucketLabel(t.bucket);
+  const months=t.months?.length?t.months.map(m=>MONTHS[m-1]).join('、'):'依事件啟動';
+  const copy=`${t.name}\n分類：${type}\n主題：${group.name}\n辦理期程：${t.deadline}\n辦理內容：${t.detail}\n表件／系統：${t.method||'未載明'}\n承辦窗口：${t.owner||'未載明'}　分機：${t.ext||'未載明'}\n資料來源：使用者提供之人事業務電子行事曆 PDF 第 ${t.page} 頁`;
+  el.innerHTML=`<div class="detail-top"><span class="task-badge ${t.bucket}">${type}</span><span class="section-kicker">${esc(t.id)} · DETAIL</span></div><h3>${esc(t.name)}</h3><p>${esc(t.detail)}</p><div class="detail-grid"><div class="detail-cell"><small>辦理期程</small><b>${esc(t.deadline)}</b></div><div class="detail-cell"><small>適用月份</small><b>${esc(months)}</b></div><div class="detail-cell"><small>表件／系統</small><b>${esc(t.method||'依通知辦理')}</b></div><div class="detail-cell"><small>承辦窗口／分機</small><b>${esc(t.owner||'未載明')}　${esc(t.ext||'')}</b></div></div><div class="detail-foot"><span>來源：PDF 第 ${t.page} 頁　·　${esc(group.name)}</span><button class="copy-btn" id="copyTask">複製事項摘要</button></div>`;
+  $('#copyTask').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(copy);showToast('已複製事項摘要');}catch(e){showToast('瀏覽器未允許剪貼簿，請手動複製');}});
+}
+function renderAll(){renderTabs();renderMonths();renderLegend();renderList();const t=taskMap.get(state.selectedTask);renderDetail(t||null);}
+
+// Three.js miniatures
+let scene,camera,renderer,controls,raycaster,mouse,islandObjects={},canvasReady=false,selected3d=null;
+function makeMat(color,rough=.76,metal=0){return new THREE.MeshStandardMaterial({color,roughness:rough,metalness:metal});}
+function addMesh(parent,geom,mat,x,y,z,id){const m=new THREE.Mesh(geom,mat);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;if(id)m.userData.islandId=id;parent.add(m);return m;}
+function box(parent,x,y,z,w,h,d,color,id,rz=0){const m=addMesh(parent,new THREE.BoxGeometry(w,h,d),makeMat(color),x,y,z,id);m.rotation.z=rz;return m;}
+function makeLabel(text,color,id){const c=document.createElement('canvas');c.width=704;c.height=176;const ctx=c.getContext('2d');ctx.fillStyle='rgba(255,252,240,.96)';roundRect(ctx,8,12,688,152,34);ctx.fill();ctx.strokeStyle=color;ctx.lineWidth=8;roundRect(ctx,8,12,688,152,34);ctx.stroke();ctx.fillStyle='#000000';ctx.font='bold 101px "Noto Sans TC",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(text,352,88,660);const tex=new THREE.CanvasTexture(c);const s=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,depthWrite:false}));s.scale.set(3.0,.75,1);s.position.set(0,3.1,0);s.userData.islandId=id;return s;}
+function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+function makeTree(g,x,z,s=1,id){addMesh(g,new THREE.CylinderGeometry(.065*s,.105*s,.48*s,8),makeMat('#8B5737'),x,.78*s,z,id);addMesh(g,new THREE.ConeGeometry(.43*s,.92*s,8),makeMat('#26964E'),x,1.38*s,z,id);addMesh(g,new THREE.ConeGeometry(.31*s,.72*s,8),makeMat('#65BC4A'),x,1.72*s,z,id);addMesh(g,new THREE.ConeGeometry(.20*s,.48*s,8),makeMat('#A4D84F'),x,1.96*s,z,id);}
+const pedestrians=[];
+const PEOPLE_PALETTES=[
+  {shirt:'#E94F64',pants:'#315B9A',hair:'#57402F',skin:'#F2C19A',bag:'#F4C64E'},
+  {shirt:'#287FC2',pants:'#4B566B',hair:'#382C28',skin:'#E9B58E',bag:'#E16D47'},
+  {shirt:'#F0B83C',pants:'#397F58',hair:'#6A432B',skin:'#F1C49F',bag:'#4E91C5'},
+  {shirt:'#8B5BC1',pants:'#45516E',hair:'#3B2D28',skin:'#DFA982',bag:'#E5A24A'},
+  {shirt:'#29A68B',pants:'#8C5139',hair:'#5A3729',skin:'#F0C09B',bag:'#E75C63'},
+  {shirt:'#E47742',pants:'#3F6690',hair:'#2E2926',skin:'#E7B18D',bag:'#61B5A3'}
+];
+function makePedestrian(island,seed,islandId){
+  const pal=PEOPLE_PALETTES[seed%PEOPLE_PALETTES.length];
+  const root=new THREE.Group();root.scale.setScalar(seed%3===0?.86:seed%3===1?.78:.82);root.userData.islandId=islandId;island.add(root);
+  // Backpack and torso
+  const bag=addMesh(root,new THREE.BoxGeometry(.16,.22,.09),makeMat(pal.bag),0,.40,-.145,islandId);
+  const torso=addMesh(root,new THREE.CylinderGeometry(.115,.155,.34,9),makeMat(pal.shirt,.7),0,.405,0,islandId);
+  addMesh(root,new THREE.CylinderGeometry(.045,.05,.09,8),makeMat(pal.skin),0,.615,0,islandId);
+  // Head, hair and tiny facial details
+  addMesh(root,new THREE.SphereGeometry(.145,14,12),makeMat(pal.skin,.8),0,.745,.018,islandId);
+  addMesh(root,new THREE.SphereGeometry(.151,14,10,0,Math.PI*2,0,Math.PI*.43),makeMat(pal.hair),0,.775,.0,islandId);
+  addMesh(root,new THREE.SphereGeometry(.018,8,6),makeMat('#26343A'),-.052,.755,.145,islandId);
+  addMesh(root,new THREE.SphereGeometry(.018,8,6),makeMat('#26343A'),.052,.755,.145,islandId);
+  // Walking legs and shoes, each with its own pivot.
+  const legL=new THREE.Group(),legR=new THREE.Group();legL.position.set(-.072,.245,0);legR.position.set(.072,.245,0);root.add(legL,legR);
+  [legL,legR].forEach((leg,idx)=>{
+    addMesh(leg,new THREE.CylinderGeometry(.045,.052,.23,8),makeMat(pal.pants),0,-.105,0,islandId);
+    addMesh(leg,new THREE.BoxGeometry(.105,.065,.17),makeMat('#FFF0D2'),0,-.225,.045,islandId);
+  });
+  // Swinging arms
+  const armL=new THREE.Group(),armR=new THREE.Group();armL.position.set(-.15,.52,0);armR.position.set(.15,.52,0);root.add(armL,armR);
+  [[armL,-1],[armR,1]].forEach(([arm])=>{
+    addMesh(arm,new THREE.CylinderGeometry(.037,.045,.245,8),makeMat(pal.shirt),0,-.115,0,islandId);
+    addMesh(arm,new THREE.SphereGeometry(.045,8,7),makeMat(pal.skin),0,-.252,.012,islandId);
+  });
+  // A few walkers carry a bright cap to make the miniature scale legible.
+  if(seed%3===1){addMesh(root,new THREE.CylinderGeometry(.16,.16,.055,12),makeMat('#F4C34D'),0,.887,.01,islandId);}
+  const angle=(seed%2)*Math.PI+Math.floor(seed/2)*.55;
+  const speed=(seed%2===0?1:-1)*(.13+(seed%4)*.012);
+  pedestrians.push({root,legL,legR,armL,armR,angle,speed,phase:seed*1.7,rx:2.12+(seed%2)*.10,rz:1.88+(seed%3)*.08});
+}
+function makeBuilding(g,x,z,w,h,d,color,id,roof='#f2d7a9'){
+  const y=.62+h/2;box(g,x,y,z,w,h,d,color,id);
+  box(g,x,y+h/2+.08,z,w*1.12,.16,d*1.12,roof,id);
+  // Front facade windows
+  const cols=Math.max(2,Math.floor(w/.42)), rows=Math.max(1,Math.floor(h/.55));
+  for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
+    const wx=x-w/2+(c+.5)*w/cols, wy=.68+(r+.5)*(h-.22)/rows;
+    box(g,wx,wy,z+d/2+.012,Math.min(.16,w/cols*.42),Math.min(.20,h/rows*.38),.025,'#dce8d9',id);
+  }
+  return y+h/2;
+}
+
+// Lively miniature town: small civic-life scenes on every island.
+const idleActors=[];
+const miniVehicles=[];
+function makeLifePerson(g,x,z,shirt,id,pose='talk',scale=1){
+  const root=new THREE.Group();root.position.set(x,.62,z);root.scale.setScalar(scale);root.userData.islandId=id;g.add(root);
+  const skin=makeMat('#F1C19B'), hair=makeMat('#4B3428'), top=makeMat(shirt), pants=makeMat('#40556A');
+  addMesh(root,new THREE.SphereGeometry(.14,12,10),skin,0,.76,0,id);
+  addMesh(root,new THREE.SphereGeometry(.145,12,8,0,Math.PI*2,0,Math.PI*.48),hair,0,.79,0,id);
+  addMesh(root,new THREE.CylinderGeometry(.12,.15,.34,9),top,0,.43,0,id);
+  const legs=[];
+  for(const sx of [-.07,.07]){
+    const leg=new THREE.Group();leg.position.set(sx,.26,0);root.add(leg);
+    addMesh(leg,new THREE.CylinderGeometry(.045,.05,.25,7),pants,0,-.12,0,id);legs.push(leg);
+  }
+  const arms=[];
+  for(const sx of [-.15,.15]){
+    const arm=new THREE.Group();arm.position.set(sx,.55,0);root.add(arm);
+    addMesh(arm,new THREE.CylinderGeometry(.035,.04,.23,7),top,0,-.11,0,id);arms.push(arm);
+  }
+  if(pose==='sit'){legs.forEach((l,i)=>{l.rotation.z=i===0?1.05:-1.05;});root.rotation.x=.12;}
+  if(pose==='clipboard'){
+    const board=addMesh(root,new THREE.BoxGeometry(.20,.25,.035),makeMat('#E7B94F'),.22,.52,.12,id);board.rotation.z=-.28;
+    arms[1].rotation.z=-1.0;
+  }
+  if(pose==='wave'){arms[1].rotation.z=-2.15;}
+  if(pose==='water'){arms[1].rotation.z=-1.15;}
+  idleActors.push({root,arms,legs,pose,phase:idleActors.length*.83});
+  return root;
+}
+function makeBench(g,x,z,id){
+  box(g,x,.78,z,.92,.13,.25,'#9B6842',id);
+  for(const sx of [-.36,.36])box(g,x+sx,.61,z,.09,.35,.10,'#76513A',id);
+  box(g,x,.98,z-.13,.92,.42,.09,'#B47A4A',id);
+}
+function makeLamp(g,x,z,id){
+  box(g,x,1.17,z,.055,1.05,.055,'#536B68',id);
+  const glow=addMesh(g,new THREE.SphereGeometry(.13,10,8),new THREE.MeshStandardMaterial({color:'#FFE58B',emissive:'#F7C84D',emissiveIntensity:.55}),x,1.73,z,id);
+  glow.scale.set(1,.72,1);
+}
+function addIslandLife(g,idx,id){
+  // Street furniture makes the islands feel inhabited, not like empty display plinths.
+  makeBench(g,-1.55,1.05,id); makeLamp(g,2.15,-1.55,id);
+  if(idx%3===0){
+    makeLifePerson(g,-1.85,.78,['#E65E52','#347DB7','#E5A73E'][idx%3],id,'sit',.86);
+    makeLifePerson(g,.45,-1.25,'#2A9B83',id,'clipboard',.88);
+  }else if(idx%3===1){
+    makeLifePerson(g,-.75,-1.22,'#E85C6A',id,'talk',.86);
+    makeLifePerson(g,.05,-1.10,'#397FC0',id,'wave',.86);
+  }else{
+    makeLifePerson(g,-1.55,.85,'#E4A43C',id,'water',.84);
+    // A tiny planter and watering can signal everyday maintenance work.
+    box(g,-1.08,.72,1.28,.42,.18,.34,'#C66D4D',id);
+    for(let k=0;k<3;k++)makeTree(g,-1.22+k*.14,1.27,.28,id);
+    addMesh(g,new THREE.CylinderGeometry(.06,.09,.18,8),makeMat('#4C9DC2'),-.95,1.02,.98,id);
+  }
+}
+function makeShuttle(a,b,index){
+  const cart=new THREE.Group();
+  const body=addMesh(cart,new THREE.BoxGeometry(.62,.28,.40),makeMat(index%2?'#F2A84A':'#38A6A0'),0,.88,0);
+  addMesh(cart,new THREE.BoxGeometry(.34,.23,.34),makeMat('#DDF2EF'),-.04,1.12,0);
+  for(const x of [-.2,.2])for(const z of [-.16,.16])addMesh(cart,new THREE.CylinderGeometry(.07,.07,.07,10),makeMat('#39464A'),x,.72,z);
+  scene.add(cart);miniVehicles.push({cart,a,b,phase:index*.48,speed:.075+index*.008});
+}
+
+function makeIsland(idx,gdata){
+  const id=gdata.id;const g=new THREE.Group();g.position.set(gdata.x,0,gdata.z);scene.add(g);islandObjects[id]=g;
+  const base=addMesh(g,new THREE.CylinderGeometry(3.3,3.38,.68,6,1),makeMat('#b88962'),0,.15,0,id);base.rotation.y=Math.PI/6;
+  const top=addMesh(g,new THREE.CylinderGeometry(3.2,3.2,.10,6,1),makeMat(gdata.top),0,.53,0,id);top.rotation.y=Math.PI/6;g.userData.top=top;
+  // Warm paved promenades with a clear, toy-like curb.
+  box(g,0,.61,1.62,4.55,.055,.40,'#F7E5B7',id,-.10);
+  box(g,-1.82,.615,.05,.38,.055,3.55,'#F7E5B7',id,.02);
+  box(g,0,.645,1.42,4.48,.025,.055,'#E8C987',id,-.10);
+  // A slim loop path gives the miniature citizens a visible route around each island.
+  const promenadePoints=[];for(let k=0;k<48;k++){const a=k/48*Math.PI*2;promenadePoints.push(new THREE.Vector3(2.12*Math.cos(a),.60,1.88*Math.sin(a)));}
+  const promenadeCurve=new THREE.CatmullRomCurve3(promenadePoints,true,'catmullrom',.35);
+  addMesh(g,new THREE.TubeGeometry(promenadeCurve,96,.035,6,true),makeMat('#EBD08E'),0,0,0,id);
+  // Little landscaped trees around the outer edge, leaving room for walkers.
+  [[-2.48,-1.26],[2.48,-1.26],[-2.48,1.32],[2.48,1.32]].forEach((p,i)=>makeTree(g,p[0],p[1],i%2?.70:.64,id));
+  const b=gdata.building;
+  if(id==='org'){
+    makeBuilding(g,-.2,-.2,1.8,1.65,1.35,'#E79A39',id,'#FFD75E');
+    makeBuilding(g,-1.65,-.5,.68,2.2,.72,'#C95D46',id,'#F7C36C');
+    makeBuilding(g,1.35,-.45,.72,2.45,.76,'#C95D46',id,'#F7C36C');
+    box(g,-.2,.72,.52,1.95,.18,.18,'#FFF0B9',id);
+    for(let i=0;i<4;i++)box(g,-.78+i*.38,.95, .52,.07,.85,.08,'#FFF6D8',id);
+  }else if(id==='welfare'){
+    makeBuilding(g,0,-.2,2.1,1.25,1.45,'#32B69A',id,'#FFD56A');
+    for(let i=0;i<5;i++)addMesh(g,new THREE.CylinderGeometry(.07,.07,.95,8),makeMat('#FFF0C8'),-.78+i*.39,1.12,.57,id);
+    const dome=addMesh(g,new THREE.SphereGeometry(.57,16,10,0,Math.PI*2,0,Math.PI/2),makeMat('#EAAE39'),0,1.9,-.18,id);dome.scale.y=.65;
+    box(g,0,.72,.58,.56,.6,.07,'#D8F3E5',id);
+  }else if(id==='training'){
+    makeBuilding(g,-.1,-.35,1.85,1.12,1.3,'#F0785E',id,'#FFD078');
+    for(let i=0;i<3;i++)box(g,-.85+i*.72,.67,.42,.62,.18,.5,['#E75F51','#F0B63F','#B75B86'][i],id);
+    const cup=addMesh(g,new THREE.CylinderGeometry(.43,.29,.58,12),makeMat('#E9A827',.36,.25),0,1.32,-1.05,id);cup.rotation.z=Math.PI;
+    addMesh(g,new THREE.TorusGeometry(.39,.09,8,18,Math.PI),makeMat('#D9941D'),-.39,1.34,-1.05,id).rotation.z=Math.PI/2;
+    addMesh(g,new THREE.TorusGeometry(.39,.09,8,18,Math.PI),makeMat('#D9941D'),.39,1.34,-1.05,id).rotation.z=-Math.PI/2;
+    box(g,0,.94,-1.05,.55,.13,.48,'#B97B26',id);
+  }else if(id==='attendance'){
+    makeBuilding(g,-.45,-.3,1.25,1.35,1.2,'#4A91D5',id,'#FFD15D');
+    const tower=box(g,1.05,1.23,-.48,.68,1.65,.7,'#347BB9',id);box(g,1.05,2.1,-.48,.82,.14,.84,'#FFE08A',id);
+    const clock=addMesh(g,new THREE.CylinderGeometry(.35,.35,.08,24),makeMat('#FFF2B8'),1.05,1.58,-.075,id);clock.rotation.x=Math.PI/2;
+    box(g,1.05,1.58,-.02,.035,.25,.02,'#255D8D',id);box(g,1.13,1.64,-.02,.19,.035,.02,'#255D8D',id);
+    // small calendar blocks
+    for(let i=0;i<3;i++)box(g,-1.35+i*.58,.72,1.18,.42,.48,.35,['#F3B74E','#EB8E70','#65BFA9'][i],id);
+  }else if(id==='equity'){
+    makeBuilding(g,0,-.45,1.65,1.05,1.2,'#AC68D0',id,'#F7B0D4');
+    const shield=addMesh(g,new THREE.OctahedronGeometry(.85,0),makeMat('#8146B2',.52),0,1.35,-.8,id);shield.scale.set(.78,1.12,.28);
+    addMesh(g,new THREE.TorusGeometry(.98,.07,10,40),makeMat('#F2BF4B'),0,1.33,-.8,id).scale.set(1,1.15,.45);
+    for(let i=0;i<3;i++)makeTree(g,-1.75+i*1.7,1.45,.68,id);
+  }else if(id==='talent'){
+    makeBuilding(g,-.1,-.35,1.75,1.2,1.2,'#8BBD36',id,'#FFD65D');
+    const roof=addMesh(g,new THREE.ConeGeometry(1.15,.65,4),makeMat('#5E9636'),-.1,1.56,-.35,id);roof.rotation.y=Math.PI/4;
+    box(g,-.1,.78,.28,.34,.7,.04,'#f4eedb',id);
+    // open book sculpture
+    box(g,1.28,.8,-.9,.68,.10,.82,'#F2B944',id,-.08);box(g,1.28,.91,-.9,.06,.09,.85,'#C96A43',id);
+  }else if(id==='manpower'){
+    makeBuilding(g,-.75,-.25,1.1,1.25,1.05,'#EDA04A',id,'#FFD16A');
+    makeBuilding(g,.82,-.3,1.08,.92,.95,'#D86C4D',id,'#F7C16A');
+    // crane
+    box(g,1.5,1.8,-1.55,.12,2.45,.12,'#9C603D',id);box(g,1.08,2.86,-1.55,1.1,.13,.13,'#C98743',id);box(g,1.56,2.2,-1.55,.06,1.25,.06,'#C98743',id);
+    box(g,1.08,.68,1.25,.72,.32,.48,'#F6D58A',id);
+  }else if(id==='info'){
+    makeBuilding(g,-.65,-.4,1.15,.95,1.0,'#2CB7C1',id,'#FFD063');
+    const tower=addMesh(g,new THREE.CylinderGeometry(.32,.47,2.1,10),makeMat('#65B6B7'),.75,.62+1.05,-.45,id);
+    addMesh(g,new THREE.ConeGeometry(.46,.42,10),makeMat('#F0784B'),.75,2.98,-.45,id);
+    addMesh(g,new THREE.SphereGeometry(.22,12,10),new THREE.MeshStandardMaterial({color:'#ffe8a4',emissive:'#e7b964',emissiveIntensity:.6}),.75,2.45,-.45,id);
+    for(let i=0;i<3;i++)box(g,-1.25+i*.65,.72,1.25,.42,.52,.34,['#F2B74B','#47B7A9','#EA846C'][i],id);
+  }else{
+    makeBuilding(g,-.25,-.45,1.55,1.15,1.15,'#F07849',id,'#FFD05A');
+    const bell=addMesh(g,new THREE.SphereGeometry(.6,16,12),makeMat('#E7AA28'),1.1,1.72,-.8,id);bell.scale.set(1,.8,.5);
+    box(g,1.1,1.15,-.8,.12,.55,.12,'#9f704e',id);
+    const signal=addMesh(g,new THREE.TorusGeometry(.42,.08,8,24),makeMat('#D95750'),1.1,2.52,-.8,id);signal.scale.set(1,.72,1);
+    for(let i=0;i<3;i++)makeTree(g,-1.65+i*.75,1.45,.7,id);
+  }
+  // little flag and flower dots
+  addMesh(g,new THREE.CylinderGeometry(.025,.025,.85,6),makeMat('#8c785e'),-2.25,.98,.1,id);
+  const flag=addMesh(g,new THREE.BoxGeometry(.5,.25,.035),makeMat(gdata.color),-1.98,1.22,.1,id);flag.rotation.y=-.25;
+  for(let i=0;i<7;i++){
+    const a=i*Math.PI*2/7;const fl=addMesh(g,new THREE.SphereGeometry(.07,7,6),makeMat(i%2?'#F07862':'#FFD05A'),Math.cos(a)*2.5,.64,Math.sin(a)*2.35,id);fl.scale.y=.35;
+  }
+  // Two miniature citizens stroll continuously around the island promenade.
+  makePedestrian(g,idx*2,id);makePedestrian(g,idx*2+1,id);
+  addIslandLife(g,idx,id);
+  const label=makeLabel(gdata.name,gdata.color,id);g.add(label);
+  return g;
+}
+function init3D(){
+  const canvas=$('#scene');
+  if(!window.THREE){buildFallback();return;}
+  try{
+    scene=new THREE.Scene();scene.background=new THREE.Color('#C8E7E8');scene.fog=new THREE.Fog('#C8E7E8',30,58);
+    camera=new THREE.PerspectiveCamera(37,canvas.clientWidth/canvas.clientHeight,.1,100);camera.position.set(0,16.2,23);
+    renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));renderer.setSize(canvas.clientWidth,canvas.clientHeight,false);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;
+    scene.add(new THREE.HemisphereLight('#FFF4D7','#547E68',.52));const key=new THREE.DirectionalLight('#FFF0D4',.92);key.position.set(-8,18,10);key.castShadow=true;key.shadow.mapSize.set(3072,3072);key.shadow.bias=-.00035;key.shadow.normalBias=.025;scene.add(key);const fill=new THREE.DirectionalLight('#B7E5F2',.22);fill.position.set(10,9,-10);scene.add(fill);
+    const ground=addMesh(scene,new THREE.PlaneGeometry(100,100),makeMat('#073B66',.98),0,-.35,0);ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;
+    // Subtle miniature wave strokes on the deep-blue ocean surface.
+    for(let i=0;i<54;i++){
+      const x=((i*17)%29-14)*1.65;
+      const z=((i*11)%23-11)*1.55;
+      const y=-.325;
+      const pts=[];
+      for(let j=0;j<=12;j++){
+        const xx=x-0.48+j*.08;
+        const zz=z+Math.sin(j*.55+i*.7)*.055;
+        pts.push(new THREE.Vector3(xx,y,zz));
+      }
+      const geo=new THREE.BufferGeometry().setFromPoints(pts);
+      const mat=new THREE.LineBasicMaterial({color:i%3===0?0x5AA9D0:0x2D719A,transparent:true,opacity:.30});
+      scene.add(new THREE.Line(geo,mat));
+    }
+
+    // Floating cotton clouds at the edges
+    for(let i=0;i<13;i++){const cloud=new THREE.Group();const x=(Math.sin(i*7.7))*12.5,z=(Math.cos(i*4.3))*9,y=1.1+(i%4)*.27;for(let j=0;j<3;j++){const p=addMesh(cloud,new THREE.SphereGeometry(.38+(j===1?.12:0),10,8),makeMat('#f9fbf5'),(j-1)*.34,0,j%2*.12);p.scale.y=.64;}cloud.position.set(x,y,z);scene.add(cloud);}
+    const coords=[[1,0],[.5,.866],[-.5,.866],[-1,0],[-.5,-.866],[.5,-.866]];
+    GROUPS.forEach((g,i)=>{const [q,r]=coords[i];const x=8.0*q,z=8.0*r;const tops=['#F8D46B','#F4B568','#FF9A7A','#73D2B5','#7DBAF0','#D2A1E8'];makeIsland(i,{...g,x,z,top:tops[i]});});
+    // Small bridges between neighboring islands to make the archipelago feel connected
+    const bridges=[[0,1],[1,2],[2,3],[3,4],[4,5],[5,0]];
+// Sky connections: non-adjacent islands are linked by elevated curved dashed routes.
+const skyLinks=[[0,2],[0,3],[0,4],[1,3],[1,4],[1,5],[2,4],[2,5],[3,5]];
+function makeSkyArc(a,b){
+  const start=islandObjects[GROUPS[a].id].position.clone();
+  const end=islandObjects[GROUPS[b].id].position.clone();
+  const mid=start.clone().add(end).multiplyScalar(.5);
+  mid.y += 5.8;
+  const curve=new THREE.QuadraticBezierCurve3(
+    new THREE.Vector3(start.x, start.y+1.1, start.z),
+    mid,
+    new THREE.Vector3(end.x, end.y+1.1, end.z)
+  );
+  const points=curve.getPoints(64);
+  const geometry=new THREE.BufferGeometry().setFromPoints(points);
+  const material=new THREE.LineDashedMaterial({
+    color:0xFFF4C7, dashSize:.42, gapSize:.24, transparent:true,
+    opacity:.92, linewidth:1
+  });
+  const line=new THREE.Line(geometry,material);
+  line.computeLineDistances();
+  line.userData.skyLink=true;
+  scene.add(line);
+}
+skyLinks.forEach(([a,b])=>makeSkyArc(a,b));
+
+    // Wooden boardwalk bridges connect only the six neighboring islands.
+    function makeWoodBridge(a,b){
+      const pa=islandObjects[GROUPS[a].id].position;
+      const pb=islandObjects[GROUPS[b].id].position;
+      const dx=pb.x-pa.x,dz=pb.z-pa.z;
+      const centerDistance=Math.sqrt(dx*dx+dz*dz);
+      const bridgeLength=Math.max(1.25,centerDistance-6.35);
+      const bridge=new THREE.Group();
+      bridge.position.set((pa.x+pb.x)/2,.63,(pa.z+pb.z)/2);
+      bridge.rotation.y=Math.atan2(dx,dz);
+      const plankCount=8;
+      const plankStep=bridgeLength/plankCount;
+      for(let i=0;i<plankCount;i++){
+        const z=-bridgeLength/2+plankStep*(i+.5);
+        const plank=addMesh(bridge,new THREE.BoxGeometry(1.02,.13,plankStep*.91),
+          makeMat(i%2?'#A96F3F':'#BD8550'),0,0,z);
+        plank.castShadow=true;plank.receiveShadow=true;
+        // Fine darker grain strip on each board.
+        const grain=addMesh(bridge,new THREE.BoxGeometry(.78,.008,.018),
+          makeMat('#80502F'),0,.069,z+(i%2?.035:-.035));
+      }
+      // Timber side rails with short posts and warm wooden handrails.
+      [-.57,.57].forEach(x=>{
+        for(let i=0;i<=4;i++){
+          const z=-bridgeLength/2+bridgeLength*i/4;
+          addMesh(bridge,new THREE.BoxGeometry(.10,.48,.10),makeMat('#80502F'),x,.22,z);
+        }
+        const rail=addMesh(bridge,new THREE.BoxGeometry(.10,.10,bridgeLength+.08),
+          makeMat('#9A6037'),x,.43,0);
+      });
+      scene.add(bridge);
+    }
+    bridges.forEach(([a,b])=>makeWoodBridge(a,b));
+    [[0,1],[3,4]].forEach((pair,i)=>makeShuttle(islandObjects[GROUPS[pair[0]].id].position,islandObjects[GROUPS[pair[1]].id].position,i));
+    raycaster=new THREE.Raycaster();mouse=new THREE.Vector2();
+    let down=null;canvas.addEventListener('pointerdown',e=>{down={x:e.clientX,y:e.clientY};});canvas.addEventListener('pointerup',e=>{if(!down||Math.hypot(e.clientX-down.x,e.clientY-down.y)>5){down=null;return;}down=null;const r=canvas.getBoundingClientRect();mouse.x=((e.clientX-r.left)/r.width)*2-1;mouse.y=-((e.clientY-r.top)/r.height)*2+1;raycaster.setFromCamera(mouse,camera);const hits=raycaster.intersectObjects(scene.children,true);for(const h of hits){let o=h.object;while(o&&!o.userData.islandId)o=o.parent;if(o&&o.userData.islandId){selectIsland(o.userData.islandId);return;}}});
+    if(THREE.OrbitControls){controls=new THREE.OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.dampingFactor=.06;controls.minDistance=13;controls.maxDistance=34;controls.maxPolarAngle=Math.PI/2.08;controls.target.set(0,-.75,0);}
+    canvasReady=true;$('#fallbackMap').style.display='none';animate();window.addEventListener('resize',resize3D);
+  }catch(e){console.warn('3D scene unavailable',e);buildFallback();}
+}
+function animate(){
+  if(!canvasReady)return;requestAnimationFrame(animate);if(controls)controls.update();
+  const t=performance.now()*.001;
+  pedestrians.forEach(p=>{
+    const a=p.angle+t*p.speed;const x=p.rx*Math.cos(a),z=p.rz*Math.sin(a);
+    const dx=-p.rx*Math.sin(a)*p.speed,dz=p.rz*Math.cos(a)*p.speed;
+    const step=Math.sin(t*6.2+p.phase);
+    p.root.position.set(x,.635+Math.abs(Math.sin(t*12.4+p.phase))*.018,z);
+    p.root.rotation.y=Math.atan2(dx,dz);
+    p.legL.rotation.z=step*.42;p.legR.rotation.z=-step*.42;
+    p.armL.rotation.z=-step*.30-.08;p.armR.rotation.z=step*.30+.08;
+  });
+  idleActors.forEach(a=>{const wave=Math.sin(t*1.7+a.phase);a.root.position.y=.62+(a.pose==='sit'?0:Math.abs(wave)*.018);if(a.pose==='talk'){a.arms[0].rotation.z=.15+wave*.22;a.arms[1].rotation.z=-.18-wave*.22;}if(a.pose==='wave')a.arms[1].rotation.z=-2.0+wave*.16;if(a.pose==='water')a.arms[1].rotation.z=-1.1+wave*.12;if(a.pose==='clipboard')a.arms[0].rotation.z=.2+wave*.08;});
+  miniVehicles.forEach(v=>{const u=(t*v.speed+v.phase)%2, f=u<1?u:2-u;v.cart.position.set(v.a.x+(v.b.x-v.a.x)*f,.0,v.a.z+(v.b.z-v.a.z)*f);v.cart.rotation.y=Math.atan2(v.b.x-v.a.x,v.b.z-v.a.z)+(u>1?Math.PI:0);});
+  renderer.render(scene,camera);
+}
+function resize3D(){if(!renderer||!camera)return;const c=$('#scene');camera.aspect=c.clientWidth/c.clientHeight;camera.updateProjectionMatrix();renderer.setSize(c.clientWidth,c.clientHeight,false);}
+function highlight3D(id){selected3d=id;GROUPS.forEach(g=>{const obj=islandObjects[g.id];if(!obj)return;obj.scale.setScalar(id===g.id?1.055:1);const top=obj.userData.top;if(top){top.material.emissive=new THREE.Color(id===g.id?'#9a7950':'#000000');top.material.emissiveIntensity=id===g.id?.18:0;}});}
+function buildFallback(){const host=$('#fallbackMap');host.style.display='grid';host.innerHTML=GROUPS.map(g=>`<button data-fallback="${g.id}" style="background:${g.color}">${g.icon}<br>${g.name}</button>`).join('');host.querySelectorAll('[data-fallback]').forEach(b=>b.addEventListener('click',()=>selectIsland(b.dataset.fallback)));$('#scene').style.display='none';}
+$('#bucketTabs').addEventListener('click',e=>{const b=e.target.closest('[data-bucket]');if(!b)return;state.bucket=b.dataset.bucket;state.selectedTask=null;if(state.bucket==='common'||state.bucket==='adhoc')state.month='all';renderAll();});
+$('#searchInput').addEventListener('input',e=>{state.query=e.target.value;state.selectedTask=null;renderList();renderDetail(null);});
+$('#viewToggle').addEventListener('click',()=>{state.showMap=!state.showMap;$('#app').classList.toggle('hide-map',!state.showMap);$('#viewToggle').textContent=state.showMap?'切換清單模式':'返回 3D 全景';setTimeout(resize3D,60);});
+$('#resetCamera').addEventListener('click',()=>{if(!camera)return;camera.position.set(0,16.2,23);if(controls){controls.target.set(0,-.75,0);controls.update();}showToast('已重置城市視角');});
+function showAllIslands(){
+  state.island=null;
+  state.selectedTask=null;
+  renderAll();
+  highlight3D(null);
+  if(camera&&controls){controls.target.set(0,-.75,0);controls.update();}
+  showToast('已顯示全部六座島嶼');
+}
+$('#allIslands').addEventListener('click',e=>{e.preventDefault();showAllIslands();});
+$('#guideBtn').addEventListener('click',()=>showToast('選月份 → 點主題島 → 點事項看期程、表單與承辦資訊。'));
+renderStats();renderAll();
+// Load Three.js global scripts from CDN; the list interface remains usable without 3D.
+</script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js" onload="window.__threeLoaded=true"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js" onload="setTimeout(()=>{if(!window.__threeStarted){window.__threeStarted=true;init3D();}},0)"></script>
+<script>window.addEventListener('load',()=>{if(!window.__threeStarted){window.__threeStarted=true;init3D();}});</script>
+
+<script>
+(function(){
+  const userKey='hrTimeIsland_v19_user';
+  const visitsKey='hrTimeIsland_v19_visits';
+  const userEl=document.getElementById('uniqueUsers');
+  const visitEl=document.getElementById('visitCount');
+  if(!userEl||!visitEl)return;
+  try{
+    let users=localStorage.getItem(userKey);
+    if(!users){localStorage.setItem(userKey,'1');users='1';}
+    let visits=parseInt(localStorage.getItem(visitsKey)||'0',10);
+    if(!Number.isFinite(visits)||visits<0)visits=0;
+    visits+=1;
+    localStorage.setItem(visitsKey,String(visits));
+    userEl.textContent=String(parseInt(users,10)||1).padStart(2,'0');
+    visitEl.textContent=String(visits).padStart(2,'0');
+  }catch(err){
+    // Storage may be disabled; show a safe session-only fallback.
+    userEl.textContent='01';
+    visitEl.textContent='01';
+    const counter=document.getElementById('visitorCounter');
+    if(counter)counter.title='瀏覽器未允許本機儲存，目前僅顯示本次瀏覽的暫時計數。';
+  }
+})();
+</script>
+
+</body>
+</html>
