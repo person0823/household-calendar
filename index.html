@@ -199,7 +199,7 @@ input::placeholder,textarea::placeholder{
     <div class="info-card"><h3>怎麼使用這座島？</h3><div class="key-list"><span class="key-pill"><b>① 選月份</b>　切換年度節奏</span><span class="key-pill"><b>② 點島嶼</b>　依業務主題篩選</span><span class="key-pill"><b>③ 點事項</b>　展開期限與承辦資訊</span><span class="key-pill"><b>④ 搜尋</b>　用關鍵字快速定位</span></div></div>
     <div class="info-card"><h3>資料閱讀提醒</h3><p>「每月共同」依原行事曆獨立列示；「每月個別」依原表月份與期程呈現；「不定時」依通知、案件或組織異動啟動。遇「函知填報」或節慶、開學等浮動期程，仍以最新正式通知及實際日期為準。</p></div>
   </section>
-  <footer class="footnote"><span class="visitor-counter" id="visitorCounter" title="僅統計此瀏覽器的本機紀錄；不同裝置或瀏覽器不會合併，並非全站即時統計。">👥 累積使用 <strong id="uniqueUsers">00</strong> 人・🔥 累計造訪 <strong id="visitCount">00</strong> 次 <small>（本機統計）</small></span><span><strong>臺中市太平區戶政事務所 林慶修 製作</strong>　｜　<strong>資料來源：</strong>《臺中市政府各機關學校人事業務電子行事曆》（使用者提供 PDF，共 6 頁）。</span><span>版本 v1.11　·　資料依來源文件整理，非即時串接官方系統。</span></footer>
+  <footer class="footnote"><span class="visitor-counter" id="visitorCounter" title="由 GoatCounter 統計此網站頁面的累計訪次。">👥 本頁累計訪客／訪次 <strong id="goatVisitCount">統計載入中</strong> <small>（GoatCounter）</small></span><span><strong>臺中市太平區戶政事務所 林慶修 製作</strong>　｜　<strong>資料來源：</strong>《臺中市政府各機關學校人事業務電子行事曆》（使用者提供 PDF，共 6 頁）。</span><span>版本 v1.12　·　資料依來源文件整理，非即時串接官方系統。</span></footer>
 </div>
 <div class="toast" id="toast"></div>
 <script>
@@ -611,29 +611,58 @@ renderStats();renderAll();
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js" onload="setTimeout(()=>{if(!window.__threeStarted){window.__threeStarted=true;init3D();}},0)"></script>
 <script>window.addEventListener('load',()=>{if(!window.__threeStarted){window.__threeStarted=true;init3D();}});</script>
 
+
+
+<!-- GoatCounter: global site analytics -->
+<script data-goatcounter="https://person0823.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
 <script>
 (function(){
-  const userKey='hrTimeIsland_v19_user';
-  const visitsKey='hrTimeIsland_v19_visits';
-  const userEl=document.getElementById('uniqueUsers');
-  const visitEl=document.getElementById('visitCount');
-  if(!userEl||!visitEl)return;
-  try{
-    let users=localStorage.getItem(userKey);
-    if(!users){localStorage.setItem(userKey,'1');users='1';}
-    let visits=parseInt(localStorage.getItem(visitsKey)||'0',10);
-    if(!Number.isFinite(visits)||visits<0)visits=0;
-    visits+=1;
-    localStorage.setItem(visitsKey,String(visits));
-    userEl.textContent=String(parseInt(users,10)||1).padStart(2,'0');
-    visitEl.textContent=String(visits).padStart(2,'0');
-  }catch(err){
-    // Storage may be disabled; show a safe session-only fallback.
-    userEl.textContent='01';
-    visitEl.textContent='01';
-    const counter=document.getElementById('visitorCounter');
-    if(counter)counter.title='瀏覽器未允許本機儲存，目前僅顯示本次瀏覽的暫時計數。';
+  const out=document.getElementById('goatVisitCount');
+  if(!out)return;
+  const site='https://person0823.goatcounter.com';
+  // This GitHub Pages project is served from /household-calendar/.
+  // Prefer GoatCounter's normalized path when count.js has initialized.
+  function getTrackedPath(){
+    try{
+      if(window.goatcounter && typeof window.goatcounter.get_data==='function'){
+        const data=window.goatcounter.get_data();
+        if(data && data.p)return data.p;
+      }
+    }catch(e){}
+    return window.location.pathname || '/';
   }
+  function loadCount(){
+    const path=getTrackedPath();
+    const url=site+'/counter/'+encodeURIComponent(path)+'.json';
+    fetch(url,{method:'GET',mode:'cors',cache:'no-store'})
+      .then(response=>{
+        if(!response.ok)throw new Error('Counter unavailable');
+        return response.json();
+      })
+      .then(data=>{
+        if(data && typeof data.count==='string' && data.count.trim()){
+          out.textContent=data.count;
+          out.title='GoatCounter 提供的本頁累計訪客／訪次統計';
+        }else{
+          throw new Error('Unexpected counter response');
+        }
+      })
+      .catch(()=>{
+        out.textContent='統計暫時無法取得';
+        out.title='請確認 GoatCounter 已啟用網站訪客計數顯示，且統計程式未被瀏覽器阻擋。';
+      });
+  }
+  // count.js is async; retry briefly so its canonical path is available.
+  let tries=0;
+  const timer=setInterval(()=>{
+    tries++;
+    if(window.goatcounter && typeof window.goatcounter.get_data==='function'){
+      clearInterval(timer);loadCount();
+    }else if(tries>=20){
+      clearInterval(timer);loadCount();
+    }
+  },150);
 })();
 </script>
 
