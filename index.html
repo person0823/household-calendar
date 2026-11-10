@@ -185,7 +185,7 @@ input::placeholder,textarea::placeholder{
   <nav class="monthbar" id="monthbar"><span class="month-label">年度節奏</span><button class="month-btn all" data-month="all">全年</button></nav>
   <main class="workspace" id="workspace">
     <section class="map-card">
-      <div class="map-head"><div><div class="section-kicker">THE HR ARCHIPELAGO</div><h2>人事業務 3D 城市全景</h2><p>點選島嶼探索主題；拖曳旋轉、滾輪縮放，從不同角度看年度工作。</p></div><div class="map-actions"><button class="tiny-btn" id="resetCamera">重置視角</button><button class="tiny-btn" id="allIslands">顯示全部島嶼</button></div></div>
+      <div class="map-head"><div><div class="section-kicker">THE HR ARCHIPELAGO</div><h2>人事業務 3D 城市全景</h2><p>點選島嶼探索主題；拖曳旋轉、滾輪縮放，從不同角度看年度工作。</p></div><div class="map-actions"><button class="tiny-btn" id="allIslands">顯示全部島嶼</button></div></div>
       <div class="scene-wrap"><canvas id="scene" aria-label="可旋轉的人事業務六角島3D城市"></canvas><div class="scene-vignette"></div><div class="scene-stamp">ISOMETRIC MINIATURE WORLD</div><div class="scene-hint">✦ 拖曳旋轉　·　滾輪縮放　·　點選島嶼探索</div><div class="fallback-map" id="fallbackMap"></div></div>
       <div class="island-legend" id="islandLegend"></div>
     </section>
@@ -199,7 +199,7 @@ input::placeholder,textarea::placeholder{
     <div class="info-card"><h3>怎麼使用這座島？</h3><div class="key-list"><span class="key-pill"><b>① 選月份</b>　切換年度節奏</span><span class="key-pill"><b>② 點島嶼</b>　依業務主題篩選</span><span class="key-pill"><b>③ 點事項</b>　展開期限與承辦資訊</span><span class="key-pill"><b>④ 搜尋</b>　用關鍵字快速定位</span></div></div>
     <div class="info-card"><h3>資料閱讀提醒</h3><p>「每月共同」依原行事曆獨立列示；「每月個別」依原表月份與期程呈現；「不定時」依通知、案件或組織異動啟動。遇「函知填報」或節慶、開學等浮動期程，仍以最新正式通知及實際日期為準。</p></div>
   </section>
-  <footer class="footnote"><span class="visitor-counter" id="visitorCounter" title="由 GoatCounter 統計此網站頁面的累計訪次。">👥 本頁累計訪客／訪次 <strong id="goatVisitCount">統計載入中</strong> <small>（GoatCounter）</small></span><span><strong>臺中市太平區戶政事務所 林慶修 製作</strong>　｜　<strong>資料來源：</strong>《臺中市政府各機關學校人事業務電子行事曆》（使用者提供 PDF，共 6 頁）。</span><span>版本 v1.12　·　資料依來源文件整理，非即時串接官方系統。</span></footer>
+  <footer class="footnote"><span class="visitor-counter" id="visitorCounter" title="由 GoatCounter 統計此網站頁面的累計訪次。">👥 本頁累計訪客／訪次 <strong id="goatVisitCount">統計載入中</strong> <small>（GoatCounter）</small></span><span><strong>臺中市太平區戶政事務所 林慶修 製作</strong>　｜　<strong>資料來源：</strong>《臺中市政府各機關學校人事業務電子行事曆》（使用者提供 PDF，共 6 頁）。</span><span>版本 v1.14　·　資料依來源文件整理，非即時串接官方系統。</span></footer>
 </div>
 <div class="toast" id="toast"></div>
 <script>
@@ -239,7 +239,7 @@ function renderLegend(){
   const host=$('#islandLegend');host.innerHTML=GROUPS.map(g=>`<button class="legend-btn ${state.island===g.id?'active':''}" data-island="${g.id}" style="--c:${g.color}"><i class="swatch"></i>${esc(g.name)}</button>`).join('');
   host.querySelectorAll('[data-island]').forEach(b=>b.addEventListener('click',()=>selectIsland(b.dataset.island)));
 }
-function selectIsland(id){state.island=state.island===id?null:id;state.selectedTask=null;renderAll();highlight3D(state.island);}
+function selectIsland(id){state.island=id;state.selectedTask=null;renderAll();highlight3D(id);focusIsland3D(id);}
 function renderList(){
   const items=filteredTasks();
   const monthTxt=currentMonthLabel();
@@ -271,7 +271,7 @@ function renderDetail(t){
 function renderAll(){renderTabs();renderMonths();renderLegend();renderList();const t=taskMap.get(state.selectedTask);renderDetail(t||null);}
 
 // Three.js miniatures
-let scene,camera,renderer,controls,raycaster,mouse,islandObjects={},canvasReady=false,selected3d=null;
+let scene,camera,renderer,controls,raycaster,mouse,islandObjects={},canvasReady=false,selected3d=null,cameraTween=null,archipelagoGroup=null,rotationTween=null;
 function makeMat(color,rough=.76,metal=0){return new THREE.MeshStandardMaterial({color,roughness:rough,metalness:metal});}
 function addMesh(parent,geom,mat,x,y,z,id){const m=new THREE.Mesh(geom,mat);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;if(id)m.userData.islandId=id;parent.add(m);return m;}
 function box(parent,x,y,z,w,h,d,color,id,rz=0){const m=addMesh(parent,new THREE.BoxGeometry(w,h,d),makeMat(color),x,y,z,id);m.rotation.z=rz;return m;}
@@ -390,11 +390,11 @@ function makeShuttle(a,b,index){
   const body=addMesh(cart,new THREE.BoxGeometry(.62,.28,.40),makeMat(index%2?'#F2A84A':'#38A6A0'),0,.88,0);
   addMesh(cart,new THREE.BoxGeometry(.34,.23,.34),makeMat('#DDF2EF'),-.04,1.12,0);
   for(const x of [-.2,.2])for(const z of [-.16,.16])addMesh(cart,new THREE.CylinderGeometry(.07,.07,.07,10),makeMat('#39464A'),x,.72,z);
-  scene.add(cart);miniVehicles.push({cart,a,b,phase:index*.48,speed:.075+index*.008});
+  archipelagoGroup.add(cart);miniVehicles.push({cart,a,b,phase:index*.48,speed:.075+index*.008});
 }
 
 function makeIsland(idx,gdata){
-  const id=gdata.id;const g=new THREE.Group();g.position.set(gdata.x,0,gdata.z);scene.add(g);islandObjects[id]=g;
+  const id=gdata.id;const g=new THREE.Group();g.position.set(gdata.x,0,gdata.z);archipelagoGroup.add(g);islandObjects[id]=g;
   const base=addMesh(g,new THREE.CylinderGeometry(3.3,3.38,.68,6,1),makeMat('#b88962'),0,.15,0,id);base.rotation.y=Math.PI/6;
   const top=addMesh(g,new THREE.CylinderGeometry(3.2,3.2,.10,6,1),makeMat(gdata.top),0,.53,0,id);top.rotation.y=Math.PI/6;g.userData.top=top;
   // Warm paved promenades with a clear, toy-like curb.
@@ -479,7 +479,7 @@ function init3D(){
   const canvas=$('#scene');
   if(!window.THREE){buildFallback();return;}
   try{
-    scene=new THREE.Scene();scene.background=new THREE.Color('#C8E7E8');scene.fog=new THREE.Fog('#C8E7E8',30,58);
+    scene=new THREE.Scene();scene.background=new THREE.Color('#C8E7E8');scene.fog=new THREE.Fog('#C8E7E8',30,58);archipelagoGroup=new THREE.Group();scene.add(archipelagoGroup);
     camera=new THREE.PerspectiveCamera(37,canvas.clientWidth/canvas.clientHeight,.1,100);camera.position.set(0,16.2,23);
     renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));renderer.setSize(canvas.clientWidth,canvas.clientHeight,false);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;
     scene.add(new THREE.HemisphereLight('#FFF4D7','#547E68',.52));const key=new THREE.DirectionalLight('#FFF0D4',.92);key.position.set(-8,18,10);key.castShadow=true;key.shadow.mapSize.set(3072,3072);key.shadow.bias=-.00035;key.shadow.normalBias=.025;scene.add(key);const fill=new THREE.DirectionalLight('#B7E5F2',.22);fill.position.set(10,9,-10);scene.add(fill);
@@ -527,7 +527,7 @@ function makeSkyArc(a,b){
   const line=new THREE.Line(geometry,material);
   line.computeLineDistances();
   line.userData.skyLink=true;
-  scene.add(line);
+  archipelagoGroup.add(line);
 }
 skyLinks.forEach(([a,b])=>makeSkyArc(a,b));
 
@@ -561,7 +561,7 @@ skyLinks.forEach(([a,b])=>makeSkyArc(a,b));
         const rail=addMesh(bridge,new THREE.BoxGeometry(.10,.10,bridgeLength+.08),
           makeMat('#9A6037'),x,.43,0);
       });
-      scene.add(bridge);
+      archipelagoGroup.add(bridge);
     }
     bridges.forEach(([a,b])=>makeWoodBridge(a,b));
     [[0,1],[3,4]].forEach((pair,i)=>makeShuttle(islandObjects[GROUPS[pair[0]].id].position,islandObjects[GROUPS[pair[1]].id].position,i));
@@ -572,7 +572,21 @@ skyLinks.forEach(([a,b])=>makeSkyArc(a,b));
   }catch(e){console.warn('3D scene unavailable',e);buildFallback();}
 }
 function animate(){
-  if(!canvasReady)return;requestAnimationFrame(animate);if(controls)controls.update();
+  if(!canvasReady)return;requestAnimationFrame(animate);
+  if(cameraTween&&camera&&controls){
+    const t=Math.min(1,(performance.now()-cameraTween.started)/cameraTween.duration);
+    const eased=t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+    camera.position.lerpVectors(cameraTween.fromPosition,cameraTween.toPosition,eased);
+    controls.target.lerpVectors(cameraTween.fromTarget,cameraTween.toTarget,eased);
+    if(t>=1)cameraTween=null;
+  }
+  if(rotationTween&&archipelagoGroup){
+    const t=Math.min(1,(performance.now()-rotationTween.started)/rotationTween.duration);
+    const eased=t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+    archipelagoGroup.rotation.y=rotationTween.from+(rotationTween.to-rotationTween.from)*eased;
+    if(t>=1)rotationTween=null;
+  }
+  if(controls)controls.update();
   const t=performance.now()*.001;
   pedestrians.forEach(p=>{
     const a=p.angle+t*p.speed;const x=p.rx*Math.cos(a),z=p.rz*Math.sin(a);
@@ -588,18 +602,51 @@ function animate(){
   renderer.render(scene,camera);
 }
 function resize3D(){if(!renderer||!camera)return;const c=$('#scene');camera.aspect=c.clientWidth/c.clientHeight;camera.updateProjectionMatrix();renderer.setSize(c.clientWidth,c.clientHeight,false);}
-function highlight3D(id){selected3d=id;GROUPS.forEach(g=>{const obj=islandObjects[g.id];if(!obj)return;obj.scale.setScalar(id===g.id?1.055:1);const top=obj.userData.top;if(top){top.material.emissive=new THREE.Color(id===g.id?'#9a7950':'#000000');top.material.emissiveIntensity=id===g.id?.18:0;}});}
+function highlight3D(id){selected3d=id;GROUPS.forEach(g=>{const obj=islandObjects[g.id];if(!obj)return;obj.scale.setScalar(id===g.id?1.10:1);const top=obj.userData.top;if(top){top.material.emissive=new THREE.Color(id===g.id?'#9a7950':'#000000');top.material.emissiveIntensity=id===g.id?.22:0;}});}
+function tweenCameraTo(targetPosition,targetLookAt,duration=900){
+  if(!camera||!controls)return;
+  cameraTween={
+    started:performance.now(),
+    duration,
+    fromPosition:camera.position.clone(),
+    toPosition:targetPosition.clone(),
+    fromTarget:controls.target.clone(),
+    toTarget:targetLookAt.clone()
+  };
+}
+function tweenArchipelagoTo(targetRotation,duration=1050){
+  if(!archipelagoGroup)return;
+  const from=archipelagoGroup.rotation.y;
+  let delta=((targetRotation-from+Math.PI)%(Math.PI*2)+Math.PI*2)%(Math.PI*2)-Math.PI;
+  rotationTween={started:performance.now(),duration,from,to:from+delta};
+}
+function focusIsland3D(id){
+  if(!camera||!controls||!islandObjects[id]||!archipelagoGroup)return;
+  const island=islandObjects[id];
+  const p=island.position;
+  // Rotate the entire island world so the selected island moves to the near/front edge.
+  const targetRotation=-Math.atan2(p.x,p.z);
+  tweenArchipelagoTo(targetRotation,1150);
+  const lookAt=new THREE.Vector3(0,1.35,8.0);
+  const destination=lookAt.clone().add(new THREE.Vector3(0,7.0,14.2));
+  tweenCameraTo(destination,lookAt,1050);
+}
+function resetIslandOverview(){
+  if(!camera||!controls||!archipelagoGroup)return;
+  tweenArchipelagoTo(0,900);
+  tweenCameraTo(new THREE.Vector3(0,16.2,23),new THREE.Vector3(0,-.75,0),900);
+}
 function buildFallback(){const host=$('#fallbackMap');host.style.display='grid';host.innerHTML=GROUPS.map(g=>`<button data-fallback="${g.id}" style="background:${g.color}">${g.icon}<br>${g.name}</button>`).join('');host.querySelectorAll('[data-fallback]').forEach(b=>b.addEventListener('click',()=>selectIsland(b.dataset.fallback)));$('#scene').style.display='none';}
 $('#bucketTabs').addEventListener('click',e=>{const b=e.target.closest('[data-bucket]');if(!b)return;state.bucket=b.dataset.bucket;state.selectedTask=null;if(state.bucket==='common'||state.bucket==='adhoc')state.month='all';renderAll();});
 $('#searchInput').addEventListener('input',e=>{state.query=e.target.value;state.selectedTask=null;renderList();renderDetail(null);});
 $('#viewToggle').addEventListener('click',()=>{state.showMap=!state.showMap;$('#app').classList.toggle('hide-map',!state.showMap);$('#viewToggle').textContent=state.showMap?'切換清單模式':'返回 3D 全景';setTimeout(resize3D,60);});
-$('#resetCamera').addEventListener('click',()=>{if(!camera)return;camera.position.set(0,16.2,23);if(controls){controls.target.set(0,-.75,0);controls.update();}showToast('已重置城市視角');});
+
 function showAllIslands(){
   state.island=null;
   state.selectedTask=null;
   renderAll();
   highlight3D(null);
-  if(camera&&controls){controls.target.set(0,-.75,0);controls.update();}
+  resetIslandOverview();
   showToast('已顯示全部六座島嶼');
 }
 $('#allIslands').addEventListener('click',e=>{e.preventDefault();showAllIslands();});
